@@ -1,118 +1,254 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import { ChangeEvent, KeyboardEvent, useState } from "react";
+import Seo from "@/components/seo";
+import styles from "./index.module.css"
+import Modal from "@/components/modal";
+import { useRouter } from "next/router";
+import privacyTos from "@/components/privacyTos";
 
 export default function Home() {
+  const [selectSignup, setSelectedSignup] = useState(false);
+  const [isAgreements, setAgreements] = useState("비동의");
+  const [isTerms, setTerms] = useState(false);
+  const [isPopup, setIsPopup] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [name, setName] = useState("");
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
+
+  const router = useRouter();
+  const modal_timer = 1500;
+
+  const signUp = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/account/signup`,
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nickname: nickname,
+            name: name,
+            password: password1
+          })
+        }
+      )
+      const { status } = response;
+      if (status === 201 || status === 400) {
+        const data = await(response).text();
+        setIsPopup(data);
+        setTimeout(() => {
+          setIsPopup("");
+        }, modal_timer);
+      }
+    } catch (error) {
+      setIsPopup("회원가입 중 오류가 발생하였습니다.");
+      setTimeout(() => {
+        setIsPopup("");
+      }, modal_timer);
+      console.log(error);
+    }
+  };
+
+  const signIn = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/account/signin`,
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nickname: nickname,
+            password: password1
+          })
+        }
+      )
+      const { status } = response;
+      if (status === 200) {
+        const data = await(response).json();
+        
+        router.push(`/about`);
+      } else if (status === 401 || status === 403) {
+        const data = await(response).text();
+        setIsPopup(data);
+        setTimeout(() => {
+          setIsPopup("");
+        }, modal_timer);
+      }
+    } catch (error) {
+      setIsPopup("로그인 중 오류가 발생하였습니다.");
+      setTimeout(() => {
+        setIsPopup("");
+      }, modal_timer);
+      console.log(error);
+    }
+  }
+
+
+  const tabSignup = () => {
+    setSelectedSignup(true);
+  };
+  const tabLogin = () => {
+    setSelectedSignup(false);
+  };
+  const tabAgreements = () => {
+    setTerms(!isTerms);
+  };
+  const handleNicknameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setNickname(event.target.value.toLowerCase());
+  };
+  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+  };
+  const handlePassword1Change = (event: ChangeEvent<HTMLInputElement>) => {
+    setPassword1(event.target.value);
+  };
+  const handlePassword2Change = (event: ChangeEvent<HTMLInputElement>) => {
+    setPassword2(event.target.value);
+  };
+
+  const handleAgreement = (event: ChangeEvent<HTMLInputElement>) => {
+    if (isAgreements === "비동의") {
+      setAgreements("동의")
+    } else {
+      setAgreements("비동의")
+    }
+    
+  }
+
+  const handleLoginClick = () => {
+    if (nickname && password1) {
+      signIn();
+    }
+    else {
+      setIsPopup("이메일과 비밀번호를 입력해 주세요.");
+      setTimeout(() => {
+        setIsPopup("");
+      }, modal_timer);
+    }
+  };
+
+  const handleSignupClick = () => {
+    if (isAgreements === "비동의") {
+      setIsPopup("약관에 동의해주세요.");
+      setTimeout(() => {
+        setIsPopup("");
+      }, modal_timer);
+    }
+    else if (password1 === password2) {
+      if (password1 && nickname) {
+        signUp();
+      }
+      else {
+        setIsPopup("이메일과 비밀번호를 입력해 주세요.");
+        setTimeout(() => {
+          setIsPopup("");
+        }, modal_timer);
+      }
+    }
+    else {
+      setIsPopup("두 비밀번호가 틀렸습니다.");
+      setTimeout(() => {
+        setIsPopup("");
+      }, modal_timer);
+    }
+  };
+
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      if (!selectSignup) {
+        handleLoginClick();
+      } else {
+        handleSignupClick();
+      }
+    }
+  };
+
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div>
+      <Seo subtitle = "Intro"/>
+      {isPopup && <div className={styles.Popup}>{isPopup}</div>}
+      <div className="max-w-[90rem] mx-auto bg-white h-screen">
+        <img className="h-full w-full object-contain object-top" src="intro_img.png"/>
+          <Modal content={privacyTos} isOpen={isTerms} setOpen={setTerms} />
+          <div className={styles.loginSignup}>
+            <div className={styles.loginSignupButtons}>
+              <button
+                className={selectSignup ? '' : styles.active}
+                onClick={tabLogin}
+              >
+                로그인
+              </button>
+              <button
+                className={selectSignup ? styles.active : ''}
+                onClick={tabSignup}
+              >
+                회원가입
+              </button>
+            </div>
+            <div className={styles.loginSignupInputs}>
+              <input
+                type="text"
+                style={{textTransform: "lowercase"}}
+                placeholder="닉네임을 입력하세요."
+                value={nickname}
+                onChange={handleNicknameChange}
+                onKeyDown={handleKeyPress}
+              />
+              {selectSignup && (
+                <input
+                  type="text"
+                  placeholder="본명을 입력하세요."
+                  value={name}
+                  onChange={handleNameChange}
+                  onKeyDown={handleKeyPress}
+                />
+              )}
+              <input
+                type="password"
+                placeholder="비밀번호를 입력하세요."
+                value={password1}
+                onChange={handlePassword1Change}
+                onKeyDown={handleKeyPress}
+              />
+              {selectSignup && (
+                <input
+                  type="password"
+                  placeholder="비밀번호를 다시 입력하세요."
+                  value={password2}
+                  onChange={handlePassword2Change}
+                  onKeyDown={handleKeyPress}
+                />
+              )}
+            </div>
+            {selectSignup && (
+              <div>
+                <button
+                  className="text-xs"
+                  onClick={tabAgreements}
+                >
+                  개인정보보호방침 및 이용약관에 동의합니다.
+                </button>
+                <input
+                  className="translate-x-2 translate-y-0.5 scale-150"
+                  type="checkbox"
+                  value={isAgreements}
+                  onChange={handleAgreement}
+                />
+              </div>
+            )}
+            <div className={styles.loginSignupButtonWrapper}>
+              {!selectSignup ? (
+                <button onClick={handleLoginClick}>로그인</button>
+              ) : (
+                <button onClick={handleSignupClick}>회원가입</button>
+              )}
+            </div>
+          </div>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </div>
+  );
 }

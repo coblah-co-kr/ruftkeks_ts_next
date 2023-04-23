@@ -1,0 +1,102 @@
+.Popup {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px; /* 추가된 코드 */
+}
+
+.loginSignup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 50px auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    background-color: white;
+    border-radius: 10%;
+    padding: 2%;
+}
+
+.loginSignupButtons button {
+    padding: 10px 20px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: normal;
+    background-color: transparent;
+    color: #333;
+    cursor: pointer;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-decoration: none;
+}
+
+.loginSignupButtons button.active {
+    background-color: #000;
+    color: #fff;
+}
+
+.loginSignupButtons button:not(.active):hover {
+    text-decoration: underline;
+}
+
+.loginSignupButtons button:first-child {
+    border-bottom-left-radius: 0;
+}
+
+.loginSignupButtons button:last-child {
+    border-bottom-right-radius: 0;
+}
+
+.loginSignupButtons button.active:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+.loginSignupButtons button.active:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+.loginSignupInputs {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.loginSignupInputs input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    outline: none;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+}
+
+.loginSignupButtonWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.loginSignupButtonWrapper button {
+    padding: 10px 30px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-top: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
