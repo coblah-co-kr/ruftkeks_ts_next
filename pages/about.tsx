@@ -7,6 +7,8 @@ import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import logOutOrKeep from "@/components/logOutKeep";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
+import { updateAddress, updateEmail, updateName, updateNickname, updatePhone } from "@/store/myInfoUpdate";
 
 class Dummy extends User {
     constructor(
@@ -29,6 +31,7 @@ class Dummy extends User {
 
 export default function About() {
     const accessToken = useSelector((state:RootState) => state.accessToken);
+    const router = useRouter();
     goToHome(accessToken.token);
     const dispatch = useDispatch();
     const [isKakaoMapLoaded, setKakaoMapLoaded] = useState(false);
@@ -55,6 +58,15 @@ export default function About() {
             } else if (response.status === 200) {
                 const data = await(response).json();
                 console.log(data);
+                dispatch(updateName(data.name));
+                dispatch(updateNickname(data.nickname));
+                dispatch(updateAddress(data.address));
+                dispatch(updateEmail(data.email));
+                dispatch(updatePhone(data.phone));
+                if (!data.address || !data.email || !data.phone) {
+                    alert("추가정보를 입력해주세요.")
+                    router.push("/mypage", undefined, { shallow:true })
+                }
             } else {
                 console.log(response.status);
             }
