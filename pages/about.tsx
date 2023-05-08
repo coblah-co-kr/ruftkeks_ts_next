@@ -2,6 +2,11 @@ import Seo from "@/components/seo";
 import { useEffect, useState } from "react";
 import styles from "./about.module.css";
 import { User } from "./_app";
+import goToHome from "@/components/goToHome";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
+import logOutOrKeep from "@/components/logOutKeep";
+import { useDispatch } from "react-redux";
 
 class Dummy extends User {
     constructor(
@@ -23,13 +28,42 @@ class Dummy extends User {
 }
 
 export default function About() {
+    const accessToken = useSelector((state:RootState) => state.accessToken);
+    goToHome(accessToken.token);
+    const dispatch = useDispatch();
     const [isKakaoMapLoaded, setKakaoMapLoaded] = useState(false);
     const grant = new Dummy(
         "김용균", "경기 하남시 풍산동", 
         "010-4141-3783", "grant@coblah.co.kr",
         37.5497470827289, 127.191870949288
     );
+
+    const get_users = async (_accessToken : string) => {
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_HOST}/api/account/me`,
+                {
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${_accessToken}`
+                    }
+                },
+            )
+            if (response.status === 403) {
+                logOutOrKeep(`${_accessToken}`, dispatch);
+            } else if (response.status === 200) {
+                const data = await(response).json();
+                console.log(data);
+            } else {
+                console.log(response.status);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     useEffect(() => {
+        get_users(accessToken.token);
         const script = document.createElement("script");
         script.type="text/javascript";
         script.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAOMAP_APPKEY}&autoload=false`;

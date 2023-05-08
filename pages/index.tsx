@@ -4,6 +4,9 @@ import styles from "./index.module.css"
 import Modal from "@/components/modal";
 import { useRouter } from "next/router";
 import privacyTos from "@/components/privacyTos";
+import Cookies from 'js-cookie';
+import { useDispatch } from "react-redux";
+import { updateAccessToken } from "@/store/accessTokenUpdate";
 
 export default function Home() {
   const [selectSignup, setSelectedSignup] = useState(false);
@@ -14,6 +17,7 @@ export default function Home() {
   const [name, setName] = useState("");
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
+  const dispatch = useDispatch();
 
   const router = useRouter();
   const modal_timer = 1500;
@@ -67,10 +71,12 @@ export default function Home() {
         }
       )
       const { status } = response;
+      
       if (status === 200) {
         const data = await(response).json();
-        
-        router.push(`/about`);
+        dispatch(updateAccessToken(data.accessToken));
+        Cookies.set("refreshToken", data.refreshToken, { expires: 1 });
+        router.push(`/about`, undefined, { shallow: true });
       } else if (status === 401 || status === 403) {
         const data = await(response).text();
         setIsPopup(data);

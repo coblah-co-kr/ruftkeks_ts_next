@@ -1,4 +1,5 @@
 import NavBar from '@/components/NavBar';
+import { wrapper } from '@/store';
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { useRouter } from 'next/router';
@@ -18,9 +19,8 @@ export abstract class User {
   ) {}
 }
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-
   return (
     <>
       {router.pathname!=="/" && NavBar(router.pathname)}
@@ -28,3 +28,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </>
   );
 }
+
+export default wrapper.withRedux(App);
