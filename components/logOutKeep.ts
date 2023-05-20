@@ -53,7 +53,7 @@ export default function logOutOrKeep( accessToken: string, dispatch: Function) {
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_API_HOST}/api/account/token/validate`,
                 {
-                    method: "post",
+                    method: "get",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${accessToken}`,

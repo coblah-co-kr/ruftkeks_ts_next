@@ -6,6 +6,11 @@ export interface MyInfoState {
     address : string;
     phone : string;
     email : string;
+    links : Array<string>;
+    profileImg : string;
+    overviewImg : string;
+    longitude : number;
+    latitude : number
 }
 
 const initialState: MyInfoState = {
@@ -14,6 +19,11 @@ const initialState: MyInfoState = {
     address : '',
     phone : '',
     email : '',
+    links : [],
+    profileImg : '',
+    overviewImg : '',
+    longitude : 0.0,
+    latitude : 0.0,
 }
 
 const myInfoUpdate = createSlice({
@@ -50,11 +60,43 @@ const myInfoUpdate = createSlice({
         ) => {
             state.email = action.payload;
         },
+        updateProfileImg: (
+            state: MyInfoState,
+            action: PayloadAction<string>
+        ) => {
+            state.profileImg = action.payload;
+        },
+        updateOverviewImg: (
+            state: MyInfoState,
+            action: PayloadAction<string>
+        ) => {
+            state.overviewImg = action.payload;
+        },
+        updateLinks: (
+            state: MyInfoState,
+            action: PayloadAction<Array<string>>
+        ) => {
+            state.links = action.payload;
+        },
+        updateLongitude: (
+            state: MyInfoState,
+            action: PayloadAction<number>
+        ) => {
+            state.longitude = action.payload;
+        },
+        updateLatitude: (
+            state: MyInfoState,
+            action: PayloadAction<number>
+        ) => {
+            state.latitude = action.payload;
+        },
     },
 });
 
 export const { 
     updateName, updateNickname, updateAddress, 
-    updatePhone, updateEmail 
+    updatePhone, updateEmail, updateLinks,
+    updateOverviewImg, updateProfileImg,
+    updateLongitude, updateLatitude
 } = myInfoUpdate.actions;
 export default myInfoUpdate;

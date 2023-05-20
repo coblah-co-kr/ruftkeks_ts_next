@@ -16,6 +16,17 @@
   }
 }
 
+@font-face {
+  font-family: 'HanSans';
+  src: url('/fonts/Black_Han_Sans/BlackHanSans-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
+}
+
+.hansans {
+  font-family: 'HanSans', sans-serif;
 }

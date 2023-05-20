@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 export interface TokenState {
     token : string;

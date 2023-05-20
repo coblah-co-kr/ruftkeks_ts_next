@@ -51,4 +51,17 @@
     background-color: black;
     color: white;
     padding: 10px 30px;
+    font-weight: bold;
+    border-radius: 10%;
+  }
+
+  .confirmButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0ea5e9;
+    color: white;
+    padding: 10px 30px;
+    font-weight: bold;
+    border-radius: 10%;
   }

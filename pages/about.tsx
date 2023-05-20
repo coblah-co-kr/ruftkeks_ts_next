@@ -8,7 +8,9 @@ import { useSelector } from "react-redux";
 import logOutOrKeep from "@/components/logOutKeep";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { updateAddress, updateEmail, updateName, updateNickname, updatePhone } from "@/store/myInfoUpdate";
+import { updateAddress, updateEmail, updateLatitude, updateLinks, updateLongitude, updateName, updateNickname, updateOverviewImg, updatePhone, updateProfileImg } from "@/store/myInfoUpdate";
+import TokenRefresh from "@/components/tokenRefresh";
+import Cookies from "js-cookie";
 
 class Dummy extends User {
     constructor(
@@ -29,24 +31,42 @@ class Dummy extends User {
     }
 }
 
+interface UsersInfo {
+    latitude : number,
+    longitude : number,
+    name : string,
+    nickname : string,
+    email : string,
+    phone : string,
+    address: string,
+    links : Array<string>,
+    profileImg : string,
+    overviewImg : string,
+}
 export default function About() {
-    const accessToken = useSelector((state:RootState) => state.accessToken);
+    const reduxAccessToken = (useSelector((state:RootState) => state.accessToken));
+    let accessToken = TokenRefresh(reduxAccessToken.token);
     const router = useRouter();
-    goToHome(accessToken.token);
+    goToHome(accessToken);
     const dispatch = useDispatch();
+    const [users, setUsers] = useState<Array<UsersInfo>>([]);
     const [isKakaoMapLoaded, setKakaoMapLoaded] = useState(false);
-    const grant = new Dummy(
-        "김용균", "경기 하남시 풍산동", 
-        "010-4141-3783", "grant@coblah.co.kr",
-        37.5497470827289, 127.191870949288
-    );
 
-    const get_users = async (_accessToken : string) => {
+    const [name, setName] = useState("");
+    const [nickname, setNickName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [address, setAddress] = useState("");
+    const [links, setLinks] = useState<Array<string>>([]);
+    const [profileImg, setProfileImg] = useState("");
+    const [overviewImg, setOverviewImg] = useState("");
+
+    const getMyInfo = async (_accessToken : string) => {
         try {
             const response = await fetch(
                 `${process.env.NEXT_PUBLIC_API_HOST}/api/account/me`,
                 {
-                    method: "post",
+                    method: "get",
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${_accessToken}`
@@ -54,7 +74,7 @@ export default function About() {
                 },
             )
             if (response.status === 403) {
-                logOutOrKeep(`${_accessToken}`, dispatch);
+                logOutOrKeep(_accessToken, dispatch);
             } else if (response.status === 200) {
                 const data = await(response).json();
                 console.log(data);
@@ -63,6 +83,21 @@ export default function About() {
                 dispatch(updateAddress(data.address));
                 dispatch(updateEmail(data.email));
                 dispatch(updatePhone(data.phone));
+                dispatch(updateLinks(data.links));
+                dispatch(updateProfileImg(data.profileImg));
+                dispatch(updateOverviewImg(data.overviewImg));
+                dispatch(updateLongitude(data.longitude));
+                dispatch(updateLatitude(data.latitude));
+                Cookies.set("name", data.name, {expires : 1/24});
+                Cookies.set("nickname", data.nickname, {expires : 1/24});
+                Cookies.set("address", data.address, {expires : 1/24});
+                Cookies.set("email", data.email, {expires : 1/24});
+                Cookies.set("phone", data.phone, {expires : 1/24});
+                Cookies.set("links", data.links, {expires : 1/24});
+                Cookies.set("profileImg", data.profileImg, {expires : 1/24});
+                Cookies.set("overviewImg", data.overviewImg, {expires : 1/24});
+                Cookies.set("longitude", data.longitude, {expires : 1/24});
+                Cookies.set("latitude", data.latitude, {expires : 1/24});
                 if (!data.address || !data.email || !data.phone) {
                     alert("추가정보를 입력해주세요.")
                     router.push("/mypage", undefined, { shallow:true })
@@ -74,8 +109,43 @@ export default function About() {
             console.log(error);
         }
     }
+    const getAllUsers = async (_accessToken : string) => {
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_HOST}/api/account/users`,
+                {
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${_accessToken}`
+                    }
+                },
+            )
+            if (response.status === 403) {
+                logOutOrKeep(_accessToken, dispatch);
+            } else if (response.status === 200) {
+                const data = await(response).json();
+                console.log(data);
+                setUsers(data);
+                if (name === '') {
+                    setName(data[0].name);
+                    setNickName(data[0].nickname);
+                    setEmail(data[0].email);
+                    setPhone(data[0].phone);
+                    setAddress(data[0].address);
+                    setLinks(data[0].links);
+                    setProfileImg(data[0].profileImg);
+                    setOverviewImg(data[0].profileImg);
+                }
+            } else {
+                console.log(response.status);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     useEffect(() => {
-        get_users(accessToken.token);
+        getMyInfo(accessToken);
         const script = document.createElement("script");
         script.type="text/javascript";
         script.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAOMAP_APPKEY}&autoload=false`;
@@ -86,6 +156,7 @@ export default function About() {
             });
         };
         document.head.appendChild(script);
+        getAllUsers(accessToken);
     }, []);
     
     useEffect(() => {
@@ -95,41 +166,44 @@ export default function About() {
                 level: 13,
             };
             const map = new window.kakao.maps.Map(document.getElementById("map"), options);
-            var imageSrc = 'vercel.svg', // 마커이미지의 주소입니다    
-                imageSize = new window.kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
-                imageOption = {offset: new window.kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-                
-            // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-            var markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
-
-            // 마커를 생성합니다
-            const ggl = grant.getLatLng()
-            var marker = new window.kakao.maps.Marker({
-                position: new window.kakao.maps.LatLng(ggl[0], ggl[1]), 
-                image: markerImage,
-                title: "김용균",
+            const markerImage = new window.kakao.maps.MarkerImage(
+                'icons/marker.png', 
+                new window.kakao.maps.Size(64, 69), 
+                { offset: new window.kakao.maps.Point(27, 69) }
+            );
+            users.forEach(user => {
+                const position = new window.kakao.maps.LatLng(user.latitude, user.longitude);
+                const marker = new window.kakao.maps.Marker({
+                    position: position,
+                    image: markerImage,
+                    title: user.name
+                });
+            
+                marker.setMap(map);
+            
+                window.kakao.maps.event.addListener(marker, 'click', function() {
+                    console.log(user);
+                    setName(user.name);
+                    setNickName(user.nickname);
+                    setEmail(user.email);
+                    setPhone(user.phone);
+                    setAddress(user.address);
+                    setLinks(user.links);
+                    setProfileImg(user.profileImg);
+                    setOverviewImg(user.profileImg);
+                });
             });
+        }  
+    }, [isKakaoMapLoaded, users]);
 
-            var marker2 = new window.kakao.maps.Marker({
-                position: new window.kakao.maps.LatLng(36.54699, 127.09598),
-                image: markerImage,
-                title: "김준균",
-            });
-
-            // 마커가 지도 위에 표시되도록 설정합니다
-            marker.setMap(map);
-            marker2.setMap(map);
-
-            window.kakao.maps.event.addListener(marker, 'click', function() {
-                // 마커 위에 인포윈도우를 표시합니다
-                console.log(marker.Gb);
-            });
-            window.kakao.maps.event.addListener(marker2, 'click', function() {
-                // 마커 위에 인포윈도우를 표시합니다
-                console.log(marker2.Gb);
-            });
-            }  
-        }, [isKakaoMapLoaded]);
+    const getIconFromLink = (strLink:string) => {
+        if (strLink && strLink.includes("vercel")) {
+            return "favicon.ico"
+        } else {
+            return "/icons/link.png"
+        }
+        
+    }
 
     return (
         <div>
@@ -140,27 +214,28 @@ export default function About() {
                 )}
                 {isKakaoMapLoaded && (
                     <div className={styles.profile}>
-                        <div className={styles.info}>
-                            <img src="no_profile.png" className={styles.profileImg}/>
-                            <div className={styles.infoLeft}>
-                                <p className={styles.name}>
-                                    이름
+                        <div className="flex flex-row mb-5">
+                            <img src={profileImg ? profileImg : "/icons/no_profile.png"} className={styles.profileImg}/>
+                            <div className="flex flex-col justify-around ml-5">
+                                <p>
+                                    {`${name}(${nickname})`}
                                 </p>
-                                <p className={styles.phone}>
-                                    전화번호
+                                <p>
+                                    {email}
                                 </p>
-                            </div>
-                            <div className={styles.infoRight}>
-                                <p className={styles.address}>
-                                    근거지
+                                <p>
+                                    {phone}
                                 </p>
-                                <p className={styles.email}>
-                                    이메일
+                                <p>
+                                    <img className="w-7" src={getIconFromLink(links[0])} alt="" onClick={ () => router.push(links[0])}/>
                                 </p>
                             </div>
                         </div>
-                        <div className={styles.detailInfo}>
-                            약력
+                        <div className="mb-5">
+                            {address}
+                        </div>
+                        <div>
+                            {overviewImg}
                         </div>
                     </div>
                 )}
