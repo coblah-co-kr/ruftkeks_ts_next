@@ -9,6 +9,7 @@ interface sprintInfoType {
 }
 
 interface sprintDetailType {
+    id:string,
     fields : {
         summary : string,
         description : string,
@@ -64,25 +65,21 @@ class stackScript {
     }
 
     addLog(data: sprintDetailType) {
-        console.log(data);
-        const titleColor = (data.fields.issuetype.name === "스토리"?
-            "text-devLogStory": data.fields.issuetype.name === "하위 작업"?
-            "text-devLogWork": ""
-        );
+        const titleColor = data.fields.issuetype.name === "스토리" ? "text-devLogStory" : data.fields.issuetype.name === "하위 작업" ? "text-devLogWork" : "";
         return (
-            <div className={"rounded-x bg-white p-5 my-1 w-full mx-5 shadow-2xl "}>
-                <div className="grid grid-cols-1 divide-y-2 divide-grantProject">
-                    {this.setBlockTitle(data.fields.summary, data.fields.status.statusCategory.name, titleColor)}
-                    <div>
-                        {data.fields.description}
-                    </div>
-                    <div className="flex flex-col mt-2">
-                        {data.fields.subtasks && data.fields.subtasks.map((index) => this.addLog(index))}
-                    </div>
-                </div>
+          <div key={data.id} className="rounded-x bg-white p-5 my-1 w-full mx-5 shadow-2xl">
+            <div className="grid grid-cols-1 divide-y-2 divide-grantProject">
+              {this.setBlockTitle(data.fields.summary, data.fields.status.statusCategory.name, titleColor)}
+              <div>
+                {data.fields.description}
+              </div>
+              <div className="flex flex-col mt-2">
+                {data.fields.subtasks && data.fields.subtasks.map((index) => this.addLog(index))}
+              </div>
             </div>
+          </div>
         );
-    }
+      }
     
     sprintOverview() {
         return (

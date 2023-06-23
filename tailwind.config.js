@@ -18,7 +18,12 @@ module.exports = {
         devLogWork: '#0e7490',
         devLogToDo: '#f87171',
         devLogProgress: '#fbbf24',
-        devLogDone: '#6ee7b7'
+        devLogDone: '#6ee7b7',
+        paymentsCompany: '#047857',
+        paymentsGray: '#64748b',
+        paymentsGod: '#fbbf24',
+        paymentsNotYet: '#f97316',
+        paymentsPass: '#6366f1'
       },
     },
   },
