@@ -12,6 +12,9 @@ export default function NavBar(pathname:string) {
                 <Link href="/financial" className={pathname==="/financial" ? "font-bold mr-10" : "mr-10"}>
                     Financial
                 </Link>
+                <Link href="/devlog" className={pathname==="/devlog" ? "font-bold mr-10" : "mr-10"}>
+                    DevLog
+                </Link>
                 <Link href="/mypage" className={pathname==="/mypage" ? "font-bold" : ""}>
                     MyPage
                 </Link>

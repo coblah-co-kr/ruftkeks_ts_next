@@ -17,6 +17,13 @@
 }
 
 @font-face {
+  font-family: 'KarGugSu';
+  src: url('/fonts/NanumKarGugSu.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'HanSans';
   src: url('/fonts/Black_Han_Sans/BlackHanSans-Regular.ttf') format('truetype');
   font-weight: normal;
@@ -29,4 +36,8 @@ body {
 
 .hansans {
   font-family: 'HanSans', sans-serif;
+}
+
+.kargugsu {
+  font-family: 'KarGugSu', sans-serif;
 }
