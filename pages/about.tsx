@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import logOutOrKeep from "@/components/logOutKeep";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { updateAddress, updateEmail, updateLatitude, updateLinks, updateLongitude, updateName, updateNickname, updateOverviewImg, updatePhone, updateProfileImg } from "@/store/myInfoUpdate";
+import { updateAddress, updateEmail, updateLatitude, updateLinks, updateLongitude, updateName, updateNickname, updateOverviewImg, updatePhone, updateProfileImg, updateRole } from "@/store/myInfoUpdate";
 import TokenRefresh from "@/components/tokenRefresh";
 import Cookies from "js-cookie";
 
@@ -77,7 +77,6 @@ export default function About() {
                 logOutOrKeep(_accessToken, dispatch);
             } else if (response.status === 200) {
                 const data = await(response).json();
-                console.log(data);
                 dispatch(updateName(data.name));
                 dispatch(updateNickname(data.nickname));
                 dispatch(updateAddress(data.address));
@@ -88,6 +87,7 @@ export default function About() {
                 dispatch(updateOverviewImg(data.overviewImg));
                 dispatch(updateLongitude(data.longitude));
                 dispatch(updateLatitude(data.latitude));
+                dispatch(updateRole(data.role));
                 Cookies.set("name", data.name, {expires : 1/24});
                 Cookies.set("nickname", data.nickname, {expires : 1/24});
                 Cookies.set("address", data.address, {expires : 1/24});
@@ -125,7 +125,6 @@ export default function About() {
                 logOutOrKeep(_accessToken, dispatch);
             } else if (response.status === 200) {
                 const data = await(response).json();
-                console.log(data);
                 setUsers(data);
                 if (name === '') {
                     setName(data[0].name);

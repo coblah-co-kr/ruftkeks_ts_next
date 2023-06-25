@@ -41,6 +41,7 @@ export default function MyPage() {
     const myInfo = useSelector((state:RootState) => state.myInfo);
     const reduxAccessToken = useSelector((state:RootState) => state.accessToken);
     let accessToken = TokenRefresh(reduxAccessToken.token);
+    goToHome(accessToken);
     
     const imgSrc = myInfo.profileImg ? myInfo.profileImg  : "/icons/addImg.png"
     const overviewSrc = myInfo.overviewImg ? myInfo.overviewImg : "/icons/addFile.png"
@@ -102,7 +103,7 @@ export default function MyPage() {
             if (status === 200) {
                 alert("저장되었습니다.");
             } else if (status === 400) {
-                goToHome(accessToken);
+                console.log(await(response).text());
             } else if (status === 403) {
                 logOutOrKeep(accessToken, dispatch)
                 alert("다시 시도해보세요.");
