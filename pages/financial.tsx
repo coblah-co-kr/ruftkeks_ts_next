@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import goToHome from "@/components/goToHome";
 import { useDispatch } from "react-redux";
 import styles from "../components/modal.module.css"
+import { NextRouter, useRouter } from "next/router";
 
 enum paymentType {
     SEND_COMPANY="0",
@@ -101,6 +102,7 @@ class financialScript {
     private setPrevCurrent : Function;
     private roleInfo : string;
     private setRoleInfo : Function;
+    private router : NextRouter;
 
     constructor(
         todayYear : number,
@@ -125,6 +127,7 @@ class financialScript {
         setPrevCurrent : Function,
         roleInfo : string,
         setRoleInfo : Function,
+        router : NextRouter,
         ) {
         this.todayYear = todayYear;
         this.todayMonth = todayMonth;
@@ -148,6 +151,7 @@ class financialScript {
         this.setPrevCurrent = setPrevCurrent;
         this.roleInfo = roleInfo;
         this.setRoleInfo = setRoleInfo;
+        this.router = router
     }
 
     protected handleArrowClick(direction : string, todayYear: number, selectedYear: number, setSelectedYear : Function) {
@@ -415,7 +419,7 @@ class financialScript {
             } else if (status === 201) {
                 alert("저장되었습니다.");
             } else if (status === 400) {
-                goToHome(this.accessToken);
+                goToHome(this.accessToken, this.router, true);
             } else if (status === 403) {
                 logOutOrKeep(this.accessToken, this.dispatch)
                 alert("다시 시도해보세요.");
@@ -453,7 +457,7 @@ class financialScript {
             } else if (status === 201) {
                 alert("저장되었습니다.");
             } else if (status === 400) {
-                goToHome(this.accessToken);
+                goToHome(this.accessToken, this.router, true);
             } else if (status === 403) {
                 logOutOrKeep(this.accessToken, this.dispatch)
                 alert("다시 시도해보세요.");
@@ -720,7 +724,8 @@ export default function Financial() {
     const [roleInfo, setRoleInfo] = useState(myInfo.role);
     const reduxAccessToken = useSelector((state:RootState) => state.accessToken);
     let accessToken = TokenRefresh(reduxAccessToken.token);
-    goToHome(accessToken);
+    const router = useRouter();
+    goToHome(accessToken, router);
     const dispatch = useDispatch();
     const fs = new financialScript(
         currentYear, currentMonth, selectedYear, setSeletedYear, 
@@ -731,7 +736,7 @@ export default function Financial() {
         expenseData, setExpenseData,
         expenseIndex, setExpenseIndex,
         prevCurrent, setPrevCurrent,
-        roleInfo, setRoleInfo,
+        roleInfo, setRoleInfo, router
     );
 
     const getPaymentsInfo = async () => {

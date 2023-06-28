@@ -47,7 +47,7 @@ export default function About() {
     const reduxAccessToken = (useSelector((state:RootState) => state.accessToken));
     let accessToken = TokenRefresh(reduxAccessToken.token);
     const router = useRouter();
-    goToHome(accessToken);
+    goToHome(accessToken, router);
     const dispatch = useDispatch();
     const [users, setUsers] = useState<Array<UsersInfo>>([]);
     const [isKakaoMapLoaded, setKakaoMapLoaded] = useState(false);

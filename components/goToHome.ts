@@ -1,8 +1,10 @@
 import { NextPageContext } from "next";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 
-export default function goToHome( accessToken : string ) {
-    const router = useRouter();
+export default function goToHome( accessToken : string, router: NextRouter, force? : boolean ) {
+    if (force) {
+        router.push("/", undefined, { shallow: true });
+    }
     if (accessToken === '') {
         if (typeof window === "undefined") {
             const { res } = router.query as unknown as NextPageContext;

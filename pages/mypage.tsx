@@ -9,6 +9,7 @@ import { updateAddress, updateName } from "@/store/myInfoUpdate";
 import AddressModal from "@/components/addressModal";
 import TokenRefresh from "@/components/tokenRefresh";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
 
 export default function MyPage() {
     const profileImgRef = useRef<HTMLInputElement>(null);
@@ -41,7 +42,8 @@ export default function MyPage() {
     const myInfo = useSelector((state:RootState) => state.myInfo);
     const reduxAccessToken = useSelector((state:RootState) => state.accessToken);
     let accessToken = TokenRefresh(reduxAccessToken.token);
-    goToHome(accessToken);
+    const router = useRouter();
+    goToHome(accessToken, router);
     
     const imgSrc = myInfo.profileImg ? myInfo.profileImg  : "/icons/addImg.png"
     const overviewSrc = myInfo.overviewImg ? myInfo.overviewImg : "/icons/addFile.png"
