@@ -20,6 +20,7 @@
 .profileImg {
     width: 30%;
     height: 100%;
+    border-radius: 5%;
 }
 
 .info {

@@ -48,10 +48,16 @@ function App({ Component, pageProps }: AppProps) {
             <div className={'max-w-[96rem] mx-auto bg-white h-screen'.concat((isMobile)?" w-fit":"")}>
               {NavBar(router.pathname)}
               <Component {...pageProps}/>
-            </div>    
+            </div>
           )}
         </div>
-      ):(
+      ):
+      router.pathname==="/"? (
+        <div className={'max-w-[96rem] mx-auto bg-white h-screen'.concat((isMobile)?" w-fit":"")}>
+          <Component {...pageProps}/>
+        </div>
+      ):
+      (
         <div className={'max-w-[48rem] mx-auto bg-white h-screen'.concat((isMobile)?" w-fit":"")}>
           {router.pathname!=="/" && NavBar(router.pathname)}
           <Component {...pageProps}/>

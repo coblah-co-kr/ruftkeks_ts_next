@@ -3,7 +3,7 @@ import Seo from "../components/seo";
 import { RootState } from "@/store";
 import TokenRefresh from "@/components/tokenRefresh";
 import goToHome from "@/components/goToHome";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../components/modal.module.css"
 import imageCompression from "browser-image-compression";
 import { MyInfoState } from "@/store/myInfoUpdate";
@@ -86,7 +86,7 @@ class pictureScript {
     header() {
         return (
             <>
-                {this.searchArea()}
+                {/*this.searchArea()*/}
                 <div onClick={() => this.setIsUpload(true)} className="mb-10 rounded-lg py-2 bg-devLogWork text-white px-2 font-bold">
                     + Upload +
                 </div>
@@ -159,7 +159,6 @@ class pictureScript {
                 this.setPanningSum(this.panningSum-1);
             }
         }
-        
     }
 
     pictureArea() {
@@ -176,7 +175,13 @@ class pictureScript {
         return (
             <div className="mt-5">
                 <div className="border-b-2 kargugsu mb-5 ml-2 text-2xl">
-                    {this.pictureData[this.pictureIndex]&&this.pictureData[this.pictureIndex].pictureContent}
+                    {this.pictureData[this.pictureIndex]&&(
+                        this.pictureData[this.pictureIndex].pictureContent.split("\r\n").map((content, index)=>(
+                            <div key={index}>
+                                {content}
+                            </div>
+                        ))
+                    )}
                 </div>
                 <div className="ml-2">
                 {this.pictureData[this.pictureIndex]&&
@@ -270,7 +275,7 @@ class pictureScript {
 
     getContent() {
         return (
-            <div className="grid justify-items-center">
+            <div className="grid justify-items-center pb-40">
                 {this.header()}
                 {this.content()}
             </div>
@@ -315,6 +320,9 @@ export default function Pictures() {
     const [touchPoints, setTouchPoints] = useState([0,0]);
     const [panningSum, setPanningSum] = useState(0);
     const [currentComment, setCurrentComment] = useState("");
+    const [scrollY, setScrollY] = useState(0);
+    const [touchAreaPoints, setTouchAreaPoints] = useState([0,0]);
+    const [startScroll, setStartScroll] = useState(0);
 
     function handleResize() {
         setIsMobile(window.innerWidth<720);
@@ -334,7 +342,7 @@ export default function Pictures() {
         setPictureLocate(e.target.value);
     }
 
-    const handleComment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setPictureComment(e.target.value);
     }
 
@@ -478,38 +486,7 @@ export default function Pictures() {
 
     useEffect(() => {
         const handleScroll = () => {
-            const scrollY = window.scrollY;
-
-            if (pictureData.length === 0) {
-                return ;
-            }
-            
-            switch (scrollY*100/(window.document.body.offsetHeight - window.innerHeight)) {
-                case 0:
-                    setPanningSum(0);
-                    switch (pictureIndex) {
-                        case 0:
-                            setPictureIndex(pictureData.length-1);
-                            break;
-                        default:
-                            setPictureIndex(pictureIndex - 1);
-                            break;
-                    }
-                    break;
-                case 100:
-                    setPanningSum(0);
-                    switch (pictureIndex) {
-                        case pictureData.length-1:
-                            setPictureIndex(0);
-                            break;
-                        default:
-                            setPictureIndex(pictureIndex + 1);
-                            break;
-                    }
-                    break;
-
-            } 
-
+            setScrollY(window.scrollY);
         };
         window.addEventListener("scroll", handleScroll);
 
@@ -517,8 +494,44 @@ export default function Pictures() {
             window.removeEventListener("scroll", handleScroll);
         }
     }, []);
+
+    const imgFileRef = useRef<HTMLInputElement>(null);
+
+    const handleImageFileClick = () => {
+        if (imgFileRef.current) {
+            imgFileRef.current.click();
+        }
+    };
+    
+    const panAreaStart = (e: React.TouchEvent<HTMLDivElement>) => {
+        setTouchAreaPoints([e.changedTouches[0].clientX, e.changedTouches[0].clientY]);
+        setStartScroll(scrollY);
+    }
+
+    const panAreaEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+        const position = (
+            (e.changedTouches[0].clientX - touchAreaPoints[0]) /
+            Math.abs(e.changedTouches[0].clientY - touchAreaPoints[1])
+        );
+        if (position<1 && position>-1 && startScroll == scrollY) {
+            setPanningSum(0);
+            if (startScroll == 0 && scrollY == 0) {
+                if (pictureIndex == 0) {
+                    setPictureIndex(pictureData.length-1);
+                } else {
+                    setPictureIndex(pictureIndex-1);
+                }
+            } else {
+                if (pictureIndex == pictureData.length-1) {
+                    setPictureIndex(0);
+                } else {
+                    setPictureIndex(pictureIndex+1);
+                }
+            }
+        }
+    }
     return (
-        <>
+        <div onTouchStart={(e)=>panAreaStart(e)} onTouchEnd={(e)=>panAreaEnd(e)}>
             <div className={styles.overlay} style={{ display : isUpload? "block" : "none"}}>
                 <div className={styles.modal}>
                     <div className={styles.content}>
@@ -526,28 +539,29 @@ export default function Pictures() {
                             <div className="hansans text-xl border-b-2">
                                 일정
                             </div>
-                            <div className="border-b-2">
+                            <div className="col-span-3 border-b-2">
                                 <input type="text" placeholder="2023년 6월 26일" value={pictureDate} onChange={(e)=>handlePictureDate(e)}/>
                             </div>
                             <div className="hansans text-xl border-b-2">
                                 장소
                             </div>
-                            <div className="border-b-2">
+                            <div className="col-span-3 border-b-2">
                                 <input className="w-full" type="text" placeholder="창원시 성산구 상남동" value={pictureLocate} onChange={(e)=>handleLocateDate(e)}/>
                             </div>
                             <div className="hansans text-xl border-b-2">
                                 본문
                             </div>
                             <div className="col-span-3 border-b-2">
-                                <input className="w-full" type="text" placeholder="난..ㄱ ㅏ끔...눈물을 흘린 ㄷ ㅏ..." value={pictureComment} onChange={(e)=>handleComment(e)}/>
+                                <textarea className="w-full" cols={30} rows={10} placeholder="난..ㄱ ㅏ끔...눈물을 흘린 ㄷ ㅏ..." value={pictureComment} onChange={(e)=>handleComment(e)}/>
                             </div>
                             <div className="hansans text-xl border-b-2 mb-5">
                                 해시태그
                             </div>
                             <div className="col-span-3 border-b-2 mb-5">
-                                <input className="w-full" type="text" placeholder="#근황" value={hashTag} onChange={(e)=>handleHashTag(e)}/>
+                                <input className="w-full" type="text" placeholder="#근황 #여행" value={hashTag} onChange={(e)=>handleHashTag(e)}/>
                             </div>
-                            <input type="file" id="image_uploads" name="image" accept="image/*" onChange={(e)=>handleImgList(e)}/>
+                            <img src="/icons/addImg.png" alt="" className="self-center" onClick={handleImageFileClick}  style={{ cursor: 'pointer' }}/>
+                            <input ref={imgFileRef} type="file" id="image_uploads" name="image" accept="image/*" onChange={(e)=>handleImgList(e)} style={{ display: 'none' }}/>
                         </div>
                         {previewImg()}
                     </div>
@@ -558,6 +572,6 @@ export default function Pictures() {
                 </div>
             </div>
             {ps.getContent()}
-        </>
+        </div>
     );
 }

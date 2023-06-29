@@ -138,7 +138,7 @@ export default function About() {
                     setAddress(data[0].address);
                     setLinks(data[0].links);
                     setProfileImg(data[0].profileImg);
-                    setOverviewImg(data[0].profileImg);
+                    setOverviewImg(data[0].overviewImg);
                 }
             } else {
                 console.log(response.status);
@@ -170,7 +170,9 @@ export default function About() {
             };
             const map = new window.kakao.maps.Map(document.getElementById("map"), options);
             const markerImage = new window.kakao.maps.MarkerImage(
-                'icons/marker.png', 
+                (
+                    profileImg ? `https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${profileImg}` : "/icons/no_profile.png"
+                ), 
                 new window.kakao.maps.Size(64, 69), 
                 { offset: new window.kakao.maps.Point(27, 69) }
             );
@@ -212,9 +214,9 @@ export default function About() {
         <div className="mx-auto h-auto grid justify-items-center">
             <Seo subtitle = "About"/>
             {isKakaoMapLoaded && (
-                <div className="flex flex-col mx-auto mt-10">
-                    <div className="flex flex-row mb-5">
-                        <img src={profileImg ? profileImg : "/icons/no_profile.png"} className={styles.profileImg}/>
+                <div className="flex flex-col mt-10">
+                    <div className="flex flex-row mb-5 mx-20">
+                        <img src={profileImg ? `https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${profileImg}` : "/icons/no_profile.png"} className="w-2/5"/>
                         <div className="flex flex-col justify-around ml-5">
                             <p>
                                 {`${name}(${nickname})`}
@@ -230,17 +232,16 @@ export default function About() {
                             </p>
                         </div>
                     </div>
-                    <div className="mb-5">
+                    <div className="mb-5 mx-20">
                         {address}
                     </div>
-                    <div>
-                        {overviewImg}
+                    <div className="flex flex-col justify-center">
+                        <img className="rounded-xl" src={`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${overviewImg}`} alt="" />
                     </div>
                 </div>
             )}
             {!isKakaoMapLoaded ? <h4>Loading..</h4> : (
-                <div id="map" className="rounded-xl shadow-lg px-48 py-96"/>
-                
+                <div id="map" className="rounded-xl shadow-lg px-48 py-96 mt-10"/>
             )}
         </div>
     );
