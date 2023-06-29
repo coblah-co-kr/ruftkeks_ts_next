@@ -75,6 +75,8 @@ export default function About() {
             )
             if (response.status === 403) {
                 logOutOrKeep(_accessToken, dispatch);
+                alert("세션이 만료되었습니다.");
+                goToHome(accessToken, router, true);
             } else if (response.status === 200) {
                 const data = await(response).json();
                 dispatch(updateName(data.name));
@@ -88,16 +90,16 @@ export default function About() {
                 dispatch(updateLongitude(data.longitude));
                 dispatch(updateLatitude(data.latitude));
                 dispatch(updateRole(data.role));
-                Cookies.set("name", data.name, {expires : 1/24});
-                Cookies.set("nickname", data.nickname, {expires : 1/24});
-                Cookies.set("address", data.address, {expires : 1/24});
-                Cookies.set("email", data.email, {expires : 1/24});
-                Cookies.set("phone", data.phone, {expires : 1/24});
-                Cookies.set("links", data.links, {expires : 1/24});
-                Cookies.set("profileImg", data.profileImg, {expires : 1/24});
-                Cookies.set("overviewImg", data.overviewImg, {expires : 1/24});
-                Cookies.set("longitude", data.longitude, {expires : 1/24});
-                Cookies.set("latitude", data.latitude, {expires : 1/24});
+                Cookies.set("name", data.name, {expires : 7});
+                Cookies.set("nickname", data.nickname, {expires : 7});
+                Cookies.set("address", data.address, {expires : 7});
+                Cookies.set("email", data.email, {expires : 7});
+                Cookies.set("phone", data.phone, {expires : 7});
+                Cookies.set("links", data.links, {expires : 7});
+                Cookies.set("profileImg", data.profileImg, {expires : 7});
+                Cookies.set("overviewImg", data.overviewImg, {expires : 7});
+                Cookies.set("longitude", data.longitude, {expires : 7});
+                Cookies.set("latitude", data.latitude, {expires : 7});
                 if (!data.address || !data.email || !data.phone) {
                     alert("추가정보를 입력해주세요.")
                     router.push("/mypage", undefined, { shallow:true })
@@ -123,6 +125,8 @@ export default function About() {
             )
             if (response.status === 403) {
                 logOutOrKeep(_accessToken, dispatch);
+                alert("세션이 만료되었습니다.");
+                goToHome(accessToken, router, true);
             } else if (response.status === 200) {
                 const data = await(response).json();
                 setUsers(data);
@@ -205,40 +209,39 @@ export default function About() {
     }
 
     return (
-        <div>
+        <div className="mx-auto h-auto grid justify-items-center">
             <Seo subtitle = "About"/>
-            <div className={styles.about}>
-                {!isKakaoMapLoaded ? <h4>Loading..</h4> : (
-                    <div id="map" className={styles.map}/>
-                )}
-                {isKakaoMapLoaded && (
-                    <div className={styles.profile}>
-                        <div className="flex flex-row mb-5">
-                            <img src={profileImg ? profileImg : "/icons/no_profile.png"} className={styles.profileImg}/>
-                            <div className="flex flex-col justify-around ml-5">
-                                <p>
-                                    {`${name}(${nickname})`}
-                                </p>
-                                <p>
-                                    {email}
-                                </p>
-                                <p>
-                                    {phone}
-                                </p>
-                                <p>
-                                    <img className="w-7" src={getIconFromLink(links[0])} alt="" onClick={ () => router.push(links[0])}/>
-                                </p>
-                            </div>
-                        </div>
-                        <div className="mb-5">
-                            {address}
-                        </div>
-                        <div>
-                            {overviewImg}
+            {isKakaoMapLoaded && (
+                <div className="flex flex-col mx-auto mt-10">
+                    <div className="flex flex-row mb-5">
+                        <img src={profileImg ? profileImg : "/icons/no_profile.png"} className={styles.profileImg}/>
+                        <div className="flex flex-col justify-around ml-5">
+                            <p>
+                                {`${name}(${nickname})`}
+                            </p>
+                            <p>
+                                {email}
+                            </p>
+                            <p>
+                                {phone}
+                            </p>
+                            <p>
+                                <img className="w-7" src={getIconFromLink(links[0])} alt="" onClick={ () => router.push(links[0])}/>
+                            </p>
                         </div>
                     </div>
-                )}
-            </div>
+                    <div className="mb-5">
+                        {address}
+                    </div>
+                    <div>
+                        {overviewImg}
+                    </div>
+                </div>
+            )}
+            {!isKakaoMapLoaded ? <h4>Loading..</h4> : (
+                <div id="map" className="rounded-xl shadow-lg px-48 py-96"/>
+                
+            )}
         </div>
     );
 }

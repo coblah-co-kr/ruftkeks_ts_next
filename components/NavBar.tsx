@@ -1,7 +1,7 @@
 import Link from "next/link";
 export default function NavBar(pathname:string) {
     return (
-        <nav>
+        <nav className="mx-10">
             <div>
                 <Link href="/about" className={pathname==="/about" ? "font-bold mr-10" : "mr-10"}>
                     About

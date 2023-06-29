@@ -123,13 +123,13 @@ export default function MyPage() {
         <div>
             <Seo subtitle = "MyPage"/>
             <AddressModal isOpen={addressSearch} setOpen={setAddressSearch} setAddress={setAddress} setLongitude={setLongitude} setLatitude={setLatitude}/>
-            <div className="flex flex-col max-w-[40rem] mx-auto h-auto justify-items-center mt-20">
+            <div className="flex flex-col mt-20 ml-10">
                 <div className="flex flex-row mb-5">
-                    <div className="w-72 flex justify-center">
+                    <div className="flex justify-center w-4/12 py-10">
                         <img src={imgSrc} alt="" className="self-center" onClick={handleProfileImageClick}  style={{ cursor: 'pointer' }}/>
                         <input ref={profileImgRef} type="file" onChange={handleProfileImageChange} style={{ display: 'none' }} />
                     </div>
-                    <div className="flex flex-col justify-around ml-10 text-lg hansans">
+                    <div className="flex flex-col justify-around ml-10 text-2xl hansans w-8/12">
                         <div>
                             <input type="text" placeholder="이름" value={name} onChange={handleNameChange}/>
                         </div>

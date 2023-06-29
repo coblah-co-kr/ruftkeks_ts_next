@@ -75,8 +75,8 @@ export default function Home() {
       if (status === 200) {
         const data = await(response).json();
         dispatch(updateAccessToken(data.accessToken));
-        Cookies.set("refreshToken", data.refreshToken, { expires: 1 });
-        Cookies.set("accessToken", data.accessToken, { expires: 1/24 });
+        Cookies.set("refreshToken", data.refreshToken, { expires: 7 });
+        Cookies.set("accessToken", data.accessToken, { expires: 7 });
         router.push(`/about`, undefined, { shallow: true });
       } else if (status === 401 || status === 403) {
         const data = await(response).text();

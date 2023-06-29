@@ -298,7 +298,7 @@ class financialScript {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col justify-items-center max-w-[72rem] mx-auto h-auto">
+                <div className="flex flex-col justify-items-center">
                     <div className="flex flex-row mx-auto">
                         <button onClick={() => this.handleArrowClick("left", this.todayYear, this.selectedYear, this.setSelectedYear)}>
                         <img src="icons/left.png" alt="" style={{maxWidth: "40px"}}/>

@@ -98,7 +98,7 @@ class pictureScript {
         return (
             <div className="flex flex-row">
                 <div className="w-2/12">
-                    <img className="rounded-3xl" src="https://coblah.co.kr/img/ruftkeks_img/king.png" alt=""/>
+                    <img className={"rounded-3xl".concat(this.myInfo.profileImg?"":" h-20")} src={this.myInfo.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${this.myInfo.profileImg}`:"/icons/no_profile.png"} alt=""/>
                 </div>
                 <div className="flex flex-col justify-evenly ml-3 w-8/12">
                     <div className="hansans text-xl">
@@ -185,13 +185,12 @@ class pictureScript {
                         <React.Fragment key={index}>
                         <div className="flex flex-row mb-2">
                             <div className="w-1/12">
-                                {/*<img className="rounded-3xl" src={`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${comment.profileImg}`} alt=""/>*/}
-                                <img className="rounded-3xl" src={`https://coblah.co.kr/img/ruftkeks_img/king.png`} alt=""/>
+                                <img className={"rounded-3xl".concat(this.myInfo.profileImg?"":" h-12")} src={this.myInfo.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${comment.profileImg}`:"/icons/no_profile.png"} alt=""/>
                             </div>
-                            <div className="w-1/12 hansans translate-y-3 ml-2 text-xl">
+                            <div className="w-2/12 hansans translate-y-3 ml-2 text-xl">
                                 {comment.name}
                             </div>
-                            <div className="w-8/12 kargugsu text-xl translate-y-2 ml-2">
+                            <div className="w-7/12 kargugsu text-xl translate-y-2 ml-2">
                                 {comment.content}
                             </div>
                             <div className="w-2/12 translate-y-3 text-xs">
@@ -438,7 +437,6 @@ export default function Pictures() {
             if (status === 200) {
                 const data = await(imageRes).json();
                 setPictureData(data);
-                console.log(data);
             } else if (status == 403){
                 alert("세션이 만료되었습니다");
                 goToHome(accessToken, router, true);
@@ -520,7 +518,7 @@ export default function Pictures() {
         }
     }, []);
     return (
-        <div className={isMobile? "w-fit snap-y max-w-[48rem] mx-auto h-auto":"snap-y max-w-[48rem] mx-auto h-auto"}>
+        <>
             <div className={styles.overlay} style={{ display : isUpload? "block" : "none"}}>
                 <div className={styles.modal}>
                     <div className={styles.content}>
@@ -560,6 +558,6 @@ export default function Pictures() {
                 </div>
             </div>
             {ps.getContent()}
-        </div>
+        </>
     );
 }

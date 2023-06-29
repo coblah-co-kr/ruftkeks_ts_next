@@ -37,7 +37,7 @@ export default function logOutOrKeep( accessToken: string, dispatch: Function) {
             )
             if (response.status==201) {
                 const data = await(response).json();
-                Cookies.set("refreshToken", data.refreshToken, { expires: 1 });
+                Cookies.set("refreshToken", data.refreshToken, { expires: 7 });
                 dispatch(updateAccessToken(data.accessToken));
             } else {
                 logOut();

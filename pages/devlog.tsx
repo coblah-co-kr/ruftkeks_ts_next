@@ -205,7 +205,7 @@ export default function DevLog() {
     }, []);
     const ss = new stackScript(
         "bg-grantStack snap-start",
-        "max-w-[72rem] mx-auto h-auto",
+        "",
         sprintData,
         issueData
     );
