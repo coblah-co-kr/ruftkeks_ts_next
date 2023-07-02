@@ -141,7 +141,7 @@ export default function DevLog() {
     const getSprintDetail = async (sprintNum:number) => {
         try {
             const response = await fetch(
-                `/api/devlog/sprint/${sprintNum}/issue`,
+                `/jira/sprint/${sprintNum}/issue`,
                 {
                     method: "get",
                     headers: {
@@ -169,12 +169,12 @@ export default function DevLog() {
     const getJiraSprint = async () => {
         try {
             const response = await fetch(
-                `/api/devlog/board/8/sprint`,
+                `/jira/board/8/sprint`,
                 {
                     method: "get",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `${process.env.NEXT_PUBLIC_JIRA_ACCESS_KEY}`
+                        "Authorization": `${process.env.NEXT_PUBLIC_JIRA_ACCESS_KEY}`,
                     },
                 }
             )
