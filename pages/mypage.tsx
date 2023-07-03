@@ -230,15 +230,15 @@ export default function MyPage() {
                 goToHome(accessToken, router, true);
             } else if (response.status === 200) {
                 const data = await(response).json();
-                setName(data.name);
-                setEmail(data.email);
-                setPhone(data.phone);
-                setAddress(data.address);
-                setLink1(data.links[0]);
-                setLongitude(data.longitude);
-                setLatitude(data.latitude);
-                setProfileImgName(data.profileImg);
-                setOverviewImgName(data.overviewImg)
+                setName(data.name?data.name:"");
+                setEmail(data.email?data.email:"");
+                setPhone(data.phone?data.phone:"");
+                setAddress(data.address?data.address:"");
+                setLink1(data.links[0]?data.links[0]:"");
+                setLongitude(data.longitude?data.longitude:0);
+                setLatitude(data.latitude?data.latitude:0);
+                setProfileImgName(data.profileImg?data.profileImg:"");
+                setOverviewImgName(data.overviewImg?data.overviewImg:"")
             } else {
                 console.log(response.status);
             }
