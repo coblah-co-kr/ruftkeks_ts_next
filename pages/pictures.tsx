@@ -166,7 +166,7 @@ class pictureScript {
         );
     }
 
-    comment(picData:pictureDataType) {
+    comment(picData:pictureDataType, reverseIndex:number) {
         return (
             <div className="mt-5">
                 <div className="border-b-2 kargugsu mb-5 ml-2 text-2xl">
@@ -203,22 +203,22 @@ class pictureScript {
                 }
                 </div>
                 <div className="flex flex-row border-t-2 py-2 mt-5">
-                    <input onKeyDown={(e)=> (e.key === "Enter")? this.postComment():null} onChange={(e)=> this.setCurrentComment(e.target.value)} value={this.currentComment} type="text" placeholder="댓글 달기.." className="w-9/12 ml-2"/>
-                    <button onClick={()=>this.postComment()} className="w-3/12 hansans text-devLogWork">게시</button>
+                    <input onKeyDown={(e)=> (e.key === "Enter")? this.postComment(picData, reverseIndex):null} onChange={(e)=> this.setCurrentComment(e.target.value)} value={this.currentComment} type="text" placeholder="댓글 달기.." className="w-9/12 ml-2"/>
+                    <button onClick={()=>this.postComment(picData, reverseIndex)} className="w-3/12 hansans text-devLogWork">게시</button>
                 </div>
             </div>
 
         );
     }
 
-    postComment() {
+    postComment(picData:pictureDataType, reverseIndex:number) {
         if (this.name === "") {
             alert("세션이 만료되었습니다.");
             goToHome(this.accessToken, this.router, true);
             return ;
         }
         const currentDate = new Date();
-        const commentList = [...this.pictureData[this.pictureIndex].comments];
+        const commentList = [...picData.comments];
         commentList.push({
             "profileImg" : `profile_img/${this.name}`,
             "name" : this.name,
@@ -236,7 +236,7 @@ class pictureScript {
                             "Authorization": `Bearer ${this.accessToken}`
                         },
                         body: JSON.stringify({
-                            id: this.pictureIndex+1,
+                            id: reverseIndex+1,
                             comments: commentList,
                         })
                     });
@@ -258,12 +258,12 @@ class pictureScript {
         getPictureImg();
     }
 
-    content(picData: pictureDataType) {
+    content(picData: pictureDataType, reverseIndex:number) {
         return (
             <div className="bg-white rounded-xl p-7 w-full mx-5 shadow-lg border-slate-200 border-2">
                 {this.info(picData)}
                 {this.pictureArea(picData)}
-                {this.comment(picData)}
+                {this.comment(picData, reverseIndex)}
             </div>
         );
     }
@@ -274,7 +274,7 @@ class pictureScript {
                 {this.header()}
                 {this.pictureData.map((index, kindex)=>(
                     <React.Fragment key={kindex}>
-                        {this.content([...this.pictureData].reverse()[kindex])}
+                        {this.content([...this.pictureData].reverse()[kindex], this.pictureData.length-1-kindex)}
                     </React.Fragment>
                 ))}
             </div>
