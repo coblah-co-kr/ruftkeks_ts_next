@@ -79,6 +79,7 @@ export default function About() {
                 goToHome(accessToken, router, true);
             } else if (response.status === 200) {
                 const data = await(response).json();
+                console.log(data);
                 dispatch(updateName(data.name));
                 dispatch(updateNickname(data.nickname));
                 dispatch(updateAddress(data.address));

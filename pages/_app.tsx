@@ -25,7 +25,7 @@ function App({ Component, pageProps }: AppProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   function handleResize() {
-    setIsMobile(window.innerWidth<720);
+    setIsMobile(window.innerWidth<768);
   }
 
   useEffect(() => {
