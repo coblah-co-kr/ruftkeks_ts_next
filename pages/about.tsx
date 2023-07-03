@@ -169,15 +169,15 @@ export default function About() {
                 level: 13,
             };
             const map = new window.kakao.maps.Map(document.getElementById("map"), options);
-            const markerImage = new window.kakao.maps.MarkerImage(
-                (
-                    profileImg ? `https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${profileImg}` : "/icons/no_profile.png"
-                ), 
-                new window.kakao.maps.Size(64, 69), 
-                { offset: new window.kakao.maps.Point(27, 69) }
-            );
             users.forEach(user => {
                 const position = new window.kakao.maps.LatLng(user.latitude, user.longitude);
+                const markerImage = new window.kakao.maps.MarkerImage(
+                    (
+                        user.profileImg ? `https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${user.profileImg}` : "/icons/no_profile.png"
+                    ), 
+                    new window.kakao.maps.Size(64, 69), 
+                    { offset: new window.kakao.maps.Point(27, 69) }
+                );
                 const marker = new window.kakao.maps.Marker({
                     position: position,
                     image: markerImage,
@@ -187,7 +187,6 @@ export default function About() {
                 marker.setMap(map);
             
                 window.kakao.maps.event.addListener(marker, 'click', function() {
-                    console.log(user);
                     setName(user.name);
                     setNickName(user.nickname);
                     setEmail(user.email);

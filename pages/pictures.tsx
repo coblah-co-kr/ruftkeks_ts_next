@@ -587,7 +587,7 @@ export default function Pictures() {
                                 본문
                             </div>
                             <div className="col-span-3 border-b-2">
-                                <textarea className="w-full" cols={30} rows={10} placeholder="난..ㄱ ㅏ끔...눈물을 흘린 ㄷ ㅏ..." value={pictureComment} onChange={(e)=>handleComment(e)}/>
+                                <textarea className="w-full" cols={30} rows={5} placeholder="난..ㄱ ㅏ끔...눈물을 흘린 ㄷ ㅏ..." value={pictureComment} onChange={(e)=>handleComment(e)}/>
                             </div>
                             <div className="hansans text-xl border-b-2 mb-5">
                                 해시태그
