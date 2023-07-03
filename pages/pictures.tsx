@@ -22,11 +22,16 @@ class pictureScript {
     private setTouchPoints : Function;
     private panningSum: number;
     private setPanningSum : Function;
-    private myInfo: MyInfoState;
     private accessToken: string;
     private currentComment : string;
     private setCurrentComment : Function;
     private router : NextRouter;
+    private name : string;
+    private setName: Function;
+    private profileImg : string;
+    private setProfileImg : Function;
+    private overviewImg : string;
+    private setOverviewImg : Function;
 
     constructor(
         isUpload : boolean,
@@ -39,11 +44,16 @@ class pictureScript {
         setTouchPoints : Function,
         panningSum : number,
         setPanningSum : Function,
-        myInfo: MyInfoState,
         accessToken : string,
         currentComment : string,
         setCurrentComment : Function,
         router : NextRouter,
+        name : string,
+        setName : Function,
+        profileImg : string,
+        setProfileImg : Function,
+        overviewImg : string,
+        setOverviewImg : Function,
         ) {
         this.isUpload = isUpload;
         this.setIsUpload = setIsUpload;
@@ -55,11 +65,16 @@ class pictureScript {
         this.setTouchPoints = setTouchPoints;
         this.panningSum = panningSum;
         this.setPanningSum = setPanningSum;
-        this.myInfo = myInfo;
         this.accessToken = accessToken;
         this.currentComment = currentComment;
         this.setCurrentComment = setCurrentComment;
         this.router = router;
+        this.name = name;
+        this.setName = setName;
+        this.profileImg = profileImg;
+        this.setProfileImg = setProfileImg;
+        this.overviewImg = overviewImg;
+        this.setOverviewImg = setOverviewImg;
     }
 
     editPicture() {
@@ -94,22 +109,22 @@ class pictureScript {
         );
     }
 
-    info() {
+    info(picData:pictureDataType) {
         return (
             <div className="flex flex-row">
                 <div className="w-2/12">
-                    <img className={"rounded-3xl".concat(this.myInfo.profileImg?"":" h-20")} src={this.myInfo.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${this.myInfo.profileImg}`:"/icons/no_profile.png"} alt=""/>
+                    <img className={"rounded-3xl".concat(this.profileImg?"":" h-20")} src={this.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${this.profileImg}`:"/icons/no_profile.png"} alt=""/>
                 </div>
                 <div className="flex flex-col justify-evenly ml-3 w-8/12">
                     <div className="hansans text-xl">
-                        {this.pictureData[this.pictureIndex]&&this.pictureData[this.pictureIndex].name}
+                        {picData&&picData.name}
                     </div>
                     <div className="kargugsu text-xl font-bold">
-                        {this.pictureData[this.pictureIndex]&&this.pictureData[this.pictureIndex].date}, {this.pictureData[this.pictureIndex]&&this.pictureData[this.pictureIndex].location}
+                        {picData&&picData.date}, {picData&&picData.location}
                     </div>
                     <div className="kargugsu text-xl font-bold flex flex-row gap-x-2">
-                        {this.pictureData[this.pictureIndex]&&
-                        this.pictureData[this.pictureIndex].hashTag.map((hashT, index)=> (
+                        {picData&&
+                        picData.hashTag.map((hashT, index)=> (
                             <React.Fragment key={index}>
                                 <div className="bg-slate-400 rounded-lg px-3">
                                     {hashT}
@@ -132,51 +147,31 @@ class pictureScript {
             </div>
         );
     }
-
-    panPictureStart(e: React.TouchEvent<HTMLImageElement>) {
-        this.setTouchPoints([e.changedTouches[0].clientX, e.changedTouches[0].clientY]);
-    }
-
-    panPictureEnd(e: React.TouchEvent<HTMLImageElement>) {
-        const position = (
-            (e.changedTouches[0].clientX - this.touchPoints[0]) /
-            Math.abs(e.changedTouches[0].clientY - this.touchPoints[1])
-        );
-        const currentPicture = this.pictureData[this.pictureIndex];
-        if (!currentPicture) {
-            return ;
-        }
-        if (position > 5) {
-            if (this.panningSum+1 === currentPicture.pictureList.length) {
-                this.setPanningSum(0);
-            } else {
-                this.setPanningSum(this.panningSum+1);
-            }
-        } else if (position < -5) {
-            if (this.panningSum === 0) {
-                this.setPanningSum(currentPicture.pictureList.length-1);
-            } else {
-                this.setPanningSum(this.panningSum-1);
-            }
-        }
-    }
-
-    pictureArea() {
+    
+    pictureArea(picData:pictureDataType) {
         return (
-            <div className="mt-5 mx-auto">
-                {this.pictureData[this.pictureIndex]&&(
-                    <img onTouchStart={(e) => this.panPictureStart(e)} onTouchEnd={(e) => this.panPictureEnd(e)} className="rounded-lg" src={`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${this.pictureData[this.pictureIndex].pictureList[this.panningSum]}`} alt=""/>
-                )}
+            <div className="mt-5 mx-auto overflow-x-scroll snap-x">
+                <div className="flex flex-row w-full scroll snap-center">
+                    {picData&&(
+                        picData.pictureList.map((index)=>(
+                            <React.Fragment key={index}>
+                                <img src={`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${index}`} alt="" />
+                            </React.Fragment>
+                            
+                        ))
+                    )}
+                </div>
             </div>
+            
         );
     }
 
-    comment() {
+    comment(picData:pictureDataType) {
         return (
             <div className="mt-5">
                 <div className="border-b-2 kargugsu mb-5 ml-2 text-2xl">
-                    {this.pictureData[this.pictureIndex]&&(
-                        this.pictureData[this.pictureIndex].pictureContent.split("\r\n").map((content, index)=>(
+                    {picData&&(
+                        picData.pictureContent.split("\r\n").map((content, index)=>(
                             <div key={index}>
                                 {content}
                             </div>
@@ -184,13 +179,13 @@ class pictureScript {
                     )}
                 </div>
                 <div className="ml-2">
-                {this.pictureData[this.pictureIndex]&&
-                    (this.pictureData[this.pictureIndex].comments.map((comment, index)=>
+                {picData&&
+                    (picData.comments.map((comment, index)=>
                     (
                         <React.Fragment key={index}>
                         <div className="flex flex-row mb-2">
                             <div className="w-1/12">
-                                <img className={"rounded-3xl".concat(this.myInfo.profileImg?"":" h-12")} src={this.myInfo.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${comment.profileImg}`:"/icons/no_profile.png"} alt=""/>
+                                <img className={"rounded-3xl".concat(this.profileImg?"":" h-12")} src={this.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${comment.profileImg}`:"/icons/no_profile.png"} alt=""/>
                             </div>
                             <div className="w-2/12 hansans translate-y-3 ml-2 text-xl">
                                 {comment.name}
@@ -217,7 +212,7 @@ class pictureScript {
     }
 
     postComment() {
-        if (this.myInfo.name === "") {
+        if (this.name === "") {
             alert("세션이 만료되었습니다.");
             goToHome(this.accessToken, this.router, true);
             return ;
@@ -225,8 +220,8 @@ class pictureScript {
         const currentDate = new Date();
         const commentList = [...this.pictureData[this.pictureIndex].comments];
         commentList.push({
-            "profileImg" : `profile_img/${this.myInfo.name}`,
-            "name" : this.myInfo.name,
+            "profileImg" : `profile_img/${this.name}`,
+            "name" : this.name,
             "content" : this.currentComment,
             "date" : `${currentDate.getFullYear()}/${currentDate.getMonth()+1}/${currentDate.getDate()}`,
         });
@@ -263,12 +258,12 @@ class pictureScript {
         getPictureImg();
     }
 
-    content() {
+    content(picData: pictureDataType) {
         return (
             <div className="bg-white rounded-xl p-7 w-full mx-5 shadow-lg border-slate-200 border-2">
-                {this.info()}
-                {this.pictureArea()}
-                {this.comment()}
+                {this.info(picData)}
+                {this.pictureArea(picData)}
+                {this.comment(picData)}
             </div>
         );
     }
@@ -277,7 +272,11 @@ class pictureScript {
         return (
             <div className="grid justify-items-center pb-40">
                 {this.header()}
-                {this.content()}
+                {this.pictureData.map((index, kindex)=>(
+                    <React.Fragment key={kindex}>
+                        {this.content([...this.pictureData].reverse()[kindex])}
+                    </React.Fragment>
+                ))}
             </div>
         );
     }
@@ -324,6 +323,10 @@ export default function Pictures() {
     const [touchAreaPoints, setTouchAreaPoints] = useState([0,0]);
     const [startScroll, setStartScroll] = useState(0);
 
+    const [name, setName] = useState("");
+    const [profileImg, setProfileImg] = useState("");
+    const [overviewImg, setOverviewImg] = useState("");
+
     function handleResize() {
         setIsMobile(window.innerWidth<720);
     }
@@ -356,8 +359,11 @@ export default function Pictures() {
         pictureData, setPictureData,
         touchPoints, setTouchPoints,
         panningSum, setPanningSum,
-        myInfo, accessToken,
+        accessToken,
         currentComment, setCurrentComment, router,
+        name, setName,
+        profileImg, setProfileImg,
+        overviewImg, setOverviewImg,
     );
 
     const handleImgList = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -383,12 +389,12 @@ export default function Pictures() {
                 formData.append("hashTag", "#"+splitedHashTag[i].trim());
             }
         }
-        if (myInfo.name==="") {
+        if (name==="") {
             alert("서버와 연결이 끊어졌습니다.");
             goToHome(accessToken, router, true);
         }
-        formData.append("name", myInfo.name);
-        formData.append("profileImg", myInfo.profileImg);
+        formData.append("name", name);
+        formData.append("profileImg", profileImg);
         formData.append("date", pictureDate);
         formData.append("location", pictureLocate);
         formData.append("pictureContent", pictureComment);
@@ -484,7 +490,36 @@ export default function Pictures() {
         }
     }, [isUpload, currentComment]);
 
+    const getMyInfo = async () => {
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_HOST}/api/account/me`,
+                {
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
+                    }
+                },
+            )
+            if (response.status === 403) {
+                alert("세션이 만료되었습니다.");
+                goToHome(accessToken, router, true);
+            } else if (response.status === 200) {
+                const data = await(response).json();
+                setName(data.name);
+                setProfileImg(data.profileImg);
+                setOverviewImg(data.overviewImg);
+            } else {
+                console.log(response.status);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
+        getMyInfo();
         const handleScroll = () => {
             setScrollY(window.scrollY);
         };

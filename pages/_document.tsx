@@ -8,6 +8,12 @@ export default function Document() {
         <Main />
         <NextScript />
       </body>
+      <style jsx>{`
+        body {
+          overscroll-behavior: none;
+          -webkit-user-select: none;
+        }
+      `}</style>
     </Html>
   )
 }

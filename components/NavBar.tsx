@@ -24,7 +24,7 @@ export default function NavBar(pathname:string) {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    padding : 3%;
+                    padding : 5%;
                 }
             `}</style>
         </nav>
