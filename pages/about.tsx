@@ -194,7 +194,7 @@ export default function About() {
                     setAddress(user.address);
                     setLinks(user.links);
                     setProfileImg(user.profileImg);
-                    setOverviewImg(user.profileImg);
+                    setOverviewImg(user.overviewImg);
                 });
             });
         }  
