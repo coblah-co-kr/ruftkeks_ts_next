@@ -268,6 +268,7 @@ export default function MyPage() {
             <AddressModal isOpen={addressSearch} setOpen={setAddressSearch} setAddress={setAddress} setLongitude={setLongitude} setLatitude={setLatitude}/>
             <div className="flex flex-col justify-center">
                 <div className="flex flex-row mb-5">
+                    <div className="w-2/12"></div>
                     <div className="flex justify-center w-4/12 py-10">
                         <img src={(previewProfileImg === undefined)? (
                             profileImgName === null || profileImgName === undefined || profileImgName === "")? (
@@ -281,7 +282,7 @@ export default function MyPage() {
                         } alt="" className="self-center rounded-xl" onClick={handleProfileImageClick}  style={{ cursor: 'pointer' }}/>
                         <input ref={profileImgRef} type="file" onChange={handleProfileImageChange} style={{ display: 'none' }} />
                     </div>
-                    <div className="flex flex-col justify-around ml-10 text-2xl hansans w-8/12">
+                    <div className="flex flex-col justify-around ml-10 text-2xl hansans w-6/12">
                         <div>
                             <input type="text" placeholder="이름" value={name} onChange={handleNameChange}/>
                         </div>
@@ -293,11 +294,11 @@ export default function MyPage() {
                         </div>
                     </div>
                 </div>
-                <div className="mb-5">
+                <div className="mb-5 ml-10">
                     <button className="mb-2 rounded-lg bg-black text-white px-5 py-1" onClick={handleAddressSearch}>주소 검색</button>
                     <input className="hansans text-lg" type="text" placeholder="주소" value={address} size={50} onChange={handleAddressChange}/>
                 </div>
-                <div className="mb-5 hansans text-lg">
+                <div className="mb-5 ml-10 hansans text-lg">
                     <input type="text" placeholder="링크" value={link1} size={50} onChange={handleLinksChange}/>
                 </div>
                 <button onClick={handleSaveMyInfo} className="bg-sky-500 hover:bg-sky-700 rounded-lg mx-auto px-10 text-white font-bold text-xl py-2 mt-2">저장</button>
