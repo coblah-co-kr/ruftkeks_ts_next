@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import Seo from "@/components/seo";
 import styles from "./index.module.css"
 import Modal from "@/components/modal";
@@ -29,15 +29,35 @@ export default function Home() {
   const router = useRouter();
   const modal_timer = 1500;
 
-  if (accessToken) {
-    if (typeof window === "undefined") {
-        const { res } = router.query as unknown as NextPageContext;
-        res?.writeHead(302, {Location: "/about"});
-        res?.end();
-    } else {
-      router.push("/about", undefined, { shallow: true })
+  const autoLogin = async() => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/account/me`,
+        {
+          method: "get",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${accessToken}`
+          }
+        }
+      )
+      if (response.status === 200) {
+        if (typeof window === "undefined") {
+            const { res } = router.query as unknown as NextPageContext;
+            res?.writeHead(302, {Location: "/about"});
+            res?.end();
+        } else {
+          router.push("/about", undefined, { shallow: true })
+        }
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
+
+  useEffect(() => {
+    autoLogin();
+  }, [])
 
   const signUp = async () => {
     try {

@@ -377,13 +377,18 @@ export default function Pictures() {
     const handleImgList = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.currentTarget.files) return;
         const file = e.currentTarget.files[0];
+        const compressedFile = imageCompression(file, {
+            maxSizeMB: 0.9,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+        })
 
         const convertFile = new File([file], file.name, {type: `${file.type}`});
         const reader = new FileReader();
         reader.readAsDataURL(convertFile);
         reader.onloadend = () => setPrevPictureList([...prevPictureList ,reader.result]);
 
-        setPictureList([...pictureList, file]);
+        setPictureList([...pictureList, compressedFile]);
     };
 
     const requestImg = async () => {
