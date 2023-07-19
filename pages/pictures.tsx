@@ -114,7 +114,7 @@ class pictureScript {
         return (
             <div className="flex flex-row">
                 <div className="w-2/12">
-                    <img className={"rounded-3xl".concat(this.profileImg?"":" h-20")} src={this.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${this.profileImg}`:"/icons/no_profile.png"} alt=""/>
+                    <img className={"rounded-3xl".concat(picData.profileImg?"":" h-20")} src={picData.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${picData.profileImg}`:"/icons/no_profile.png"} alt=""/>
                 </div>
                 <div className="flex flex-col justify-evenly ml-3 w-8/12">
                     <div className="hansans text-xl">
@@ -426,7 +426,7 @@ export default function Pictures() {
                 setIsUpload(false);
             } else {
                 console.log("개발자에게 문의하세요.");
-                alert("오류가 발생했습니다.");
+                alert(`오류가 발생했습니다. status : ${status} formData : ${formData}`);
             }
         } catch (error) {
             console.log(error);
