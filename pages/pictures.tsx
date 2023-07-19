@@ -10,6 +10,7 @@ import { MyInfoState } from "@/store/myInfoUpdate";
 import { profile } from "console";
 import { NextRouter, useRouter } from "next/router";
 import React from "react";
+import { useGeoLocation } from "@/components/useGeoLocation";
 
 class pictureScript {
     private isUpload : boolean;
@@ -304,11 +305,17 @@ export default function Pictures() {
     let accessToken = TokenRefresh(reduxAccessToken.token);
     goToHome(accessToken, router);
     const myInfo = useSelector((state:RootState) => state.myInfo);
-    
+    const currentDate = new Date()
 
+    const { location, error } = useGeoLocation({
+        enableHighAccuracy: true,
+        timeout: 1000 * 10,
+        maximumAge: 1000 * 3600 * 24,
+    });
+    
     const [isMobile, setIsMobile] = useState(false);
     const [isUpload, setIsUpload] = useState(false);
-    const [pictureDate, setPictureDate] = useState("");
+    const [pictureDate, setPictureDate] = useState(`${currentDate.getFullYear()}년 ${currentDate.getMonth()+1}월 ${currentDate.getDate()}일`);
     const [pictureLocate, setPictureLocate] = useState("");
     const [pictureComment, setPictureComment] = useState("");
     const [hashTag, setHashTag] = useState("");
@@ -322,6 +329,7 @@ export default function Pictures() {
     const [scrollY, setScrollY] = useState(0);
     const [touchAreaPoints, setTouchAreaPoints] = useState([0,0]);
     const [startScroll, setStartScroll] = useState(0);
+    const [requestUploadImg, setRequestUploadImg] = useState(false);
 
     const [name, setName] = useState("");
     const [profileImg, setProfileImg] = useState("");
@@ -379,6 +387,7 @@ export default function Pictures() {
     };
 
     const requestImg = async () => {
+        setRequestUploadImg(true);
         let formData = new FormData();
         for(let i=0; i<pictureList.length; i++) {
             formData.append("image", pictureList[i]);
@@ -421,6 +430,7 @@ export default function Pictures() {
         } catch (error) {
             console.log(error);
         }
+        setRequestUploadImg(false);
     };
 
     const previewImg = () => {
@@ -518,6 +528,33 @@ export default function Pictures() {
         }
     }
 
+    const searchLocationWithLatitude = async () => {
+        try {
+            const responseKakao = await fetch(
+                `https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${location?.longitude}&y=${location?.latitude}`,
+                {
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `KakaoAK ${process.env.NEXT_PUBLIC_KAKAODEV_APPKEY}`
+                    }
+                }
+            )
+            if (responseKakao.status === 200) {
+                const data = await(responseKakao).json();
+                setPictureLocate(data.documents[0].address_name)
+            } else {
+                console.log("개발자에게 문의하세요");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    useEffect(() => {
+        if (location !== undefined)
+            searchLocationWithLatitude();
+    }, [location])
+
     useEffect(() => {
         getMyInfo();
         const handleScroll = () => {
@@ -602,7 +639,7 @@ export default function Pictures() {
                     </div>
                     <div className="flex flex-row mx-auto gap-x-1 pb-5 mt-5">
                         <div onClick={()=>setIsUpload(false)} className={styles.closeButton}>취소</div>
-                        <div onClick={()=>requestImg()} className={styles.confirmButton}>확인</div>
+                        <div onClick={()=>confirm("저장하시겠습니까?")?requestImg():null} className={styles.confirmButton}>{requestUploadImg?`업로드중..`:`확인`}</div>
                     </div>
                 </div>
             </div>

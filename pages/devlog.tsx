@@ -157,6 +157,7 @@ export default function DevLog() {
                 const data = await(response).json();
                 const issuesNum = data.total;
                 setIssueData(data.issues);
+                console.log(data.issues);
             } else {
                 console.log("개발자에게 문의하세요");
             }
@@ -187,6 +188,7 @@ export default function DevLog() {
                 for (const idx in data.values) {
                     if (data.values[idx].state === "active") {
                         setSprintData(data.values[idx]);
+                        console.log(data.values[idx]);
                         const domainArray = data.values[idx].self.split("/");
                         getSprintDetail(domainArray[domainArray.length-1]);
                         break;

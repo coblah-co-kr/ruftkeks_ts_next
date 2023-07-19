@@ -7,6 +7,10 @@ import privacyTos from "@/components/privacyTos";
 import Cookies from 'js-cookie';
 import { useDispatch } from "react-redux";
 import { updateAccessToken } from "@/store/accessTokenUpdate";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import TokenRefresh from "@/components/tokenRefresh";
+import { NextPageContext } from "next/types";
 
 export default function Home() {
   const [selectSignup, setSelectedSignup] = useState(false);
@@ -19,8 +23,21 @@ export default function Home() {
   const [password2, setPassword2] = useState("");
   const dispatch = useDispatch();
 
+  const reduxAccessToken = (useSelector((state:RootState) => state.accessToken));
+  let accessToken = TokenRefresh(reduxAccessToken.token);
+
   const router = useRouter();
   const modal_timer = 1500;
+
+  if (accessToken) {
+    if (typeof window === "undefined") {
+        const { res } = router.query as unknown as NextPageContext;
+        res?.writeHead(302, {Location: "/about"});
+        res?.end();
+    } else {
+      router.push("/about", undefined, { shallow: true })
+    }
+  }
 
   const signUp = async () => {
     try {
