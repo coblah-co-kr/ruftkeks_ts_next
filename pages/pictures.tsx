@@ -330,6 +330,7 @@ export default function Pictures() {
     const [touchAreaPoints, setTouchAreaPoints] = useState([0,0]);
     const [startScroll, setStartScroll] = useState(0);
     const [requestUploadImg, setRequestUploadImg] = useState(false);
+    const [convertingPrevImg, setConvertingPrevImg] = useState(false);
 
     const [name, setName] = useState("");
     const [profileImg, setProfileImg] = useState("");
@@ -374,21 +375,23 @@ export default function Pictures() {
         overviewImg, setOverviewImg,
     );
 
-    const handleImgList = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImgList = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.currentTarget.files) return;
+        setConvertingPrevImg(true);
         const file = e.currentTarget.files[0];
-        const compressedFile = imageCompression(file, {
+        const compressedFile = await imageCompression(file, {
             maxSizeMB: 0.9,
             maxWidthOrHeight: 1920,
             useWebWorker: true,
-        })
+        });
 
-        const convertFile = new File([file], file.name, {type: `${file.type}`});
+        const convertFile = new File([compressedFile], file.name, {type: `${file.type}`});
         const reader = new FileReader();
         reader.readAsDataURL(convertFile);
         reader.onloadend = () => setPrevPictureList([...prevPictureList ,reader.result]);
 
-        setPictureList([...pictureList, compressedFile]);
+        setPictureList([...pictureList, convertFile]);
+        setConvertingPrevImg(false);
     };
 
     const requestImg = async () => {
@@ -641,6 +644,7 @@ export default function Pictures() {
                             </div>
                             <img src="/icons/addImg.png" alt="" className="self-center" onClick={handleImageFileClick}  style={{ cursor: 'pointer' }}/>
                             <input ref={imgFileRef} type="file" id="image_uploads" name="image" accept="image/*" onChange={(e)=>handleImgList(e)} style={{ display: 'none' }}/>
+                            {convertingPrevImg?`이미지 압축 중입니다.`:``}
                         </div>
                         {previewImg()}
                     </div>
