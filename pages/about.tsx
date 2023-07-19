@@ -242,6 +242,9 @@ export default function About() {
             {!isKakaoMapLoaded ? <h4>Loading..</h4> : (
                 <div id="map" className="rounded-xl shadow-lg px-48 py-96 mt-10"/>
             )}
+            <div className="text-xs">
+            마지막 수정 : 7월 19일 22:35
+            </div>
         </div>
     );
 }

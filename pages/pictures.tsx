@@ -426,9 +426,11 @@ export default function Pictures() {
                 setIsUpload(false);
             } else {
                 console.log("개발자에게 문의하세요.");
+                alert("오류가 발생했습니다.");
             }
         } catch (error) {
             console.log(error);
+            alert(error);
         }
         setRequestUploadImg(false);
     };
