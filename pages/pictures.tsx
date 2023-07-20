@@ -612,6 +612,12 @@ export default function Pictures() {
             }
         }
     }
+
+    const cancelUpload = () => {
+        setIsUpload(false);
+        setPrevPictureList([]);
+        setPictureList([]);
+    }
     return (
         <div onTouchStart={(e)=>panAreaStart(e)} onTouchEnd={(e)=>panAreaEnd(e)}>
             <div className={styles.overlay} style={{ display : isUpload? "block" : "none"}}>
@@ -649,7 +655,7 @@ export default function Pictures() {
                         {previewImg()}
                     </div>
                     <div className="flex flex-row mx-auto gap-x-1 pb-5 mt-5">
-                        <div onClick={()=>setIsUpload(false)} className={styles.closeButton}>취소</div>
+                        <div onClick={()=> cancelUpload()} className={styles.closeButton}>취소</div>
                         <div onClick={()=>confirm("저장하시겠습니까?")?requestImg():null} className={styles.confirmButton}>{requestUploadImg?`업로드중..`:`확인`}</div>
                     </div>
                 </div>
