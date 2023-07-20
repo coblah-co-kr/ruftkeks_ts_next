@@ -114,13 +114,13 @@ class pictureScript {
         return (
             <div className="flex flex-row">
                 <div className="w-2/12">
-                    <img className={"rounded-3xl"} src={`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/profile_img/${picData.name}`} alt=""/>
+                    <img className={"rounded-3xl dark:filter dark:brightness-75"} src={`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/profile_img/${picData.name}`} alt=""/>
                 </div>
                 <div className="flex flex-col justify-evenly ml-3 w-8/12">
-                    <div className="hansans text-xl">
+                    <div className="hansans text-xl dark:text-slate-300">
                         {picData&&picData.name}
                     </div>
-                    <div className="kargugsu text-xl font-bold">
+                    <div className="kargugsu text-xl font-bold dark:text-slate-300">
                         {picData&&picData.date}, {picData&&picData.location}
                     </div>
                     <div className="kargugsu text-xl font-bold flex flex-row gap-x-2">
@@ -156,7 +156,7 @@ class pictureScript {
                     {picData&&(
                         picData.pictureList.map((index)=>(
                             <React.Fragment key={index}>
-                                <img src={`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${index}`} alt="" />
+                                <img className="dark:filter dark:brightness-75" src={`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${index}`} alt="" />
                             </React.Fragment>
                             
                         ))
@@ -170,7 +170,7 @@ class pictureScript {
     comment(picData:pictureDataType, reverseIndex:number) {
         return (
             <div className="mt-5">
-                <div className="border-b-2 kargugsu mb-5 ml-2 text-2xl">
+                <div className="border-b-2 kargugsu mb-5 ml-2 text-2xl dark:text-slate-300">
                     {picData&&(
                         picData.pictureContent.split("\r\n").map((content, index)=>(
                             <div key={index}>
@@ -184,14 +184,14 @@ class pictureScript {
                     (picData.comments.map((comment, index)=>
                     (
                         <React.Fragment key={index}>
-                        <div className="flex flex-row mb-2">
+                        <div className="flex flex-row mb-2 dark:text-slate-300">
                             <div className="w-1/12">
-                                <img className={"rounded-3xl".concat(this.profileImg?"":" h-12")} src={this.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${comment.profileImg}`:"/icons/no_profile.png"} alt=""/>
+                                <img className={"rounded-3xl dark:filter dark:brightness-75".concat(this.profileImg?"":" h-12")} src={this.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${comment.profileImg}`:"/icons/no_profile.png"} alt=""/>
                             </div>
-                            <div className="w-2/12 hansans translate-y-3 ml-2 text-xl">
+                            <div className="w-1/12 hansans translate-y-3 ml-2 text-xl">
                                 {comment.name}
                             </div>
-                            <div className="w-7/12 kargugsu text-xl translate-y-2 ml-2">
+                            <div className="w-8/12 kargugsu text-xl translate-y-2 ml-2">
                                 {comment.content}
                             </div>
                             <div className="w-2/12 translate-y-3 text-xs">
@@ -204,8 +204,8 @@ class pictureScript {
                 }
                 </div>
                 <div className="flex flex-row border-t-2 py-2 mt-5">
-                    <input onKeyDown={(e)=> (e.key === "Enter")? this.postComment(picData, reverseIndex):null} onChange={(e)=> this.setCurrentComment(e.target.value)} value={this.currentComment} type="text" placeholder="댓글 달기.." className="w-9/12 ml-2"/>
-                    <button onClick={()=>this.postComment(picData, reverseIndex)} className="w-3/12 hansans text-devLogWork">게시</button>
+                    <input onKeyDown={(e)=> (e.key === "Enter")? this.postComment(picData, reverseIndex):null} onChange={(e)=> this.setCurrentComment(e.target.value)} value={this.currentComment} type="text" placeholder="댓글 달기.." className="w-9/12 ml-2 bg-slate-700"/>
+                    <button onClick={()=>this.postComment(picData, reverseIndex)} className="w-3/12 hansans text-devLogWork dark:text-white">게시</button>
                 </div>
             </div>
 
@@ -261,7 +261,7 @@ class pictureScript {
 
     content(picData: pictureDataType, reverseIndex:number) {
         return (
-            <div className="bg-white rounded-xl p-7 w-full mx-5 shadow-lg border-slate-200 border-2">
+            <div className="bg-white dark:bg-slate-700 rounded-xl p-7 w-full mx-5 shadow-lg border-slate-200 border-2">
                 {this.info(picData)}
                 {this.pictureArea(picData)}
                 {this.comment(picData, reverseIndex)}

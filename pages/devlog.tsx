@@ -67,7 +67,7 @@ class stackScript {
     addLog(data: sprintDetailType) {
         const titleColor = data.fields.issuetype.name === "스토리" ? "text-devLogStory" : data.fields.issuetype.name === "하위 작업" ? "text-devLogWork" : "";
         return (
-          <div key={data.id} className="rounded-x bg-white p-5 my-1 w-full mx-5 shadow-2xl">
+          <div key={data.id} className="rounded-x bg-white p-5 my-1 w-full mx-5 shadow-2xl dark:bg-slate-300">
             <div className="grid grid-cols-1 divide-y-2 divide-grantProject">
               {this.setBlockTitle(data.fields.summary, data.fields.status.statusCategory.name, titleColor)}
               <div>
@@ -87,7 +87,7 @@ class stackScript {
                 <div className="hansans text-4xl text-devLogSprint">
                     {this.sprintInfo? this.sprintInfo.name : ""}
                 </div>
-                <div className="">
+                <div className="dark:text-slate-300">
                     {this.sprintInfo? this.sprintInfo.goal : ""}
                 </div>
             </div>
@@ -96,14 +96,14 @@ class stackScript {
   
     title() {
         return (
-            <div className="hansans text-5xl mt-20">
+            <div className="hansans text-5xl mt-20 dark:text-white">
                 개발 현황
             </div>
         );
     }
     titleCaption():ReactElement {
         return (
-            <div className="kargugsu text-xl mb-20">
+            <div className="kargugsu text-xl mb-20 dark:text-slate-200">
             단기 개발 계획 및 진행상황을 알려드립니다.
             </div>
         );

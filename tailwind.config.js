@@ -23,9 +23,10 @@ module.exports = {
         paymentsGray: '#64748b',
         paymentsGod: '#fbbf24',
         paymentsNotYet: '#f97316',
-        paymentsPass: '#6366f1'
+        paymentsPass: '#6366f1',
       },
     },
   },
+  darkMode: "class",
   plugins: [],
 }

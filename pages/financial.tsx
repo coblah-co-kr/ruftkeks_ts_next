@@ -310,17 +310,17 @@ class financialScript {
                             <img src="icons/right.png" alt="" style={{maxWidth: "40px"}}/>
                         </button>
                     </div>
-                    <div className="hansans text-5xl mt-5 text-center mb-10">
+                    <div className="hansans text-5xl mt-5 text-center mb-10 dark:text-slate-300">
                         회비 납부 내역
                     </div>
-                    <div className="flex flex-row justify-center hansans mb-10">
+                    <div className="flex flex-row justify-center hansans mb-10 dark:text-slate-200">
                         <div className="rounded p-3 bg-paymentsCompany mx-2"/>납부(취업자: 2만)
                         <div className="rounded p-3 bg-paymentsGray mx-2"/>납부(회색분자: 1.5만)
                         <div className="rounded p-3 bg-paymentsGod mx-2"/>납부(갓수: 1만)
                         <div className="rounded p-3 bg-paymentsNotYet mx-2"/>미납
                         <div className="rounded p-3 bg-paymentsPass mx-2"/>Pass
                     </div>
-                    <div className="grid grid-cols-12 grid-flow-row justify-items-center gap-y-4">
+                    <div className="grid grid-cols-12 grid-flow-row justify-items-center gap-y-4 dark:text-slate-300">
                         {this.paymentHead()}
                         {MonthList.map((index) => (
                             <React.Fragment key={index}>
@@ -577,16 +577,16 @@ class financialScript {
             <button onClick={()=> this.handlePayment(monthName, 6, paymentList[6])} className={"w-5 p-5 ".concat(paymentList[6])}/>
             </div>
             <div>
-            <input type="text" value={this.formatCurrency(this.autoCalc(this.selectedData, monthName)?.toString())} readOnly onChange={(e)=>this.handleBalanceData(e, monthName, 0)} style={{width:80, height:40, borderWidth:2, borderColor:"black"}}/>
+            <input className="dark:bg-black" type="text" value={this.formatCurrency(this.autoCalc(this.selectedData, monthName)?.toString())} readOnly onChange={(e)=>this.handleBalanceData(e, monthName, 0)} style={{width:80, height:40, borderWidth:2, borderColor:"black"}}/>
             </div>
             <div>
-            <input type="number" placeholder="0" value={this.selectedBalanceData[monthName][1] === "0"? "" :this.selectedBalanceData[monthName][1]} onChange={(e)=>this.handleBalanceData(e, monthName, 1)} style={{width:80, height:40, borderWidth:2, borderColor:"black"}}/>
+            <input className="dark:bg-black" type="number" placeholder="0" value={this.selectedBalanceData[monthName][1] === "0"? "" :this.selectedBalanceData[monthName][1]} onChange={(e)=>this.handleBalanceData(e, monthName, 1)} style={{width:80, height:40, borderWidth:2, borderColor:"black"}}/>
             </div>
             <div>
             <button className="w-20 rounded border-2 h-10 border-black" onClick={() => this.noteExpense(monthName)} value={this.selectedBalanceData[monthName][2]}>{this.selectedBalanceData[monthName][2] === "0"? "추가" :this.formatCurrency(this.selectedBalanceData[monthName][2])}</button>
             </div>
             <div>
-            <input type="text" value={this.formatCurrency(this.selectedBalanceData[monthName][3])} readOnly style={{width:80, height:40, borderWidth:2, borderColor:"black"}}/>
+            <input className="dark:bg-black" type="text" value={this.formatCurrency(this.selectedBalanceData[monthName][3])} readOnly style={{width:80, height:40, borderWidth:2, borderColor:"black"}}/>
             </div>
             </>
             

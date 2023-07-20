@@ -277,27 +277,27 @@ export default function MyPage() {
                                 previewProfileImg
                             )
 
-                        } alt="" className="self-center rounded-xl" onClick={handleProfileImageClick}  style={{ cursor: 'pointer' }}/>
+                        } alt="" className="self-center rounded-xl dark:filter dark:brightness-75" onClick={handleProfileImageClick}  style={{ cursor: 'pointer' }}/>
                         <input ref={profileImgRef} type="file" onChange={handleProfileImageChange} style={{ display: 'none' }} />
                     </div>
-                    <div className="flex flex-col justify-around ml-5 text-lg hansans w-4/12">
+                    <div className="flex flex-col justify-around ml-5 text-lg hansans w-4/12 dark:text-slate-200">
                         <div>
-                            <input type="text" placeholder="이름" value={name} onChange={handleNameChange}/>
+                            <input className="dark:bg-black" type="text" placeholder="이름" value={name} onChange={handleNameChange}/>
                         </div>
                         <div>
-                            <input type="text" placeholder="이메일" value={email} onChange={handleEmailChange}/>
+                            <input className="dark:bg-black" type="text" placeholder="이메일" value={email} onChange={handleEmailChange}/>
                         </div>
                         <div>
-                            <input type="text" placeholder="전화번호" value={phone} onChange={handlePhoneChange}/>
+                            <input className="dark:bg-black" type="text" placeholder="전화번호" value={phone} onChange={handlePhoneChange}/>
                         </div>
                     </div>
                 </div>
                 <div className="mb-5 ml-5 flex flex-col mx-auto">
                     <button className="mb-2 rounded-lg bg-black text-white px-5 py-1" onClick={handleAddressSearch}>주소 검색</button>
-                    <input className="hansans text-lg" type="text" placeholder="주소" value={address} size={30} onChange={handleAddressChange}/>
+                    <input className="hansans text-lg dark:bg-black dark:text-slate-200" type="text" placeholder="주소" value={address} size={30} onChange={handleAddressChange}/>
                 </div>
-                <div className="mb-5 ml-5 hansans text-lg">
-                    <input type="text" placeholder="링크" value={link1} size={40} onChange={handleLinksChange}/>
+                <div className="mb-5 ml-5 hansans text-lg dark:text-slate-200">
+                    <input className="dark:bg-black" type="text" placeholder="링크" value={link1} size={40} onChange={handleLinksChange}/>
                 </div>
                 <button onClick={handleSaveMyInfo} className="bg-sky-500 hover:bg-sky-700 rounded-lg mx-auto px-10 text-white font-bold text-xl py-2 mt-2">저장</button>
                 <div className="flex justify-center mt-20">
@@ -309,7 +309,7 @@ export default function MyPage() {
                         ):(
                             previewOverviewImg
                         )
-                    } alt="" className="self-center rounded-xl" onClick={handleOverviewImageClick}  style={{ cursor: 'pointer' }}/>
+                    } alt="" className="self-center rounded-xl dark:filter dark:brightness-75" onClick={handleOverviewImageClick}  style={{ cursor: 'pointer' }}/>
                     <input ref={overviewImgRef} type="file" onChange={handleOverviewImageChange} style={{ display: 'none' }} />
                 </div>
             </div>

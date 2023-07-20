@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         <link rel="icon" href="/ruftk2.ico" />
       </Head>
-      <body>
+      <body className='dark:bg-black'>
         <Main />
         <NextScript />
       </body>
