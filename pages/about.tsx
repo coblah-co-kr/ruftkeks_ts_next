@@ -62,9 +62,7 @@ export default function About() {
     const [links, setLinks] = useState<Array<string>>([]);
     const [profileImg, setProfileImg] = useState("");
     const [overviewImg, setOverviewImg] = useState("");
-    const [isDark, setIsDark] = useState(
-        localStorage.getItem("theme") == "dark" ? true: false
-    );
+    const [isDark, setIsDark] = useState(true);
     useEffect(() => {
         localStorage.getItem("theme") == "dark"
         ? document.documentElement.classList.add("dark")
