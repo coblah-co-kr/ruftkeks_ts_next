@@ -188,10 +188,10 @@ class pictureScript {
                             <div className="w-1/12">
                                 <img className={"rounded-3xl dark:filter dark:brightness-75".concat(this.profileImg?"":" h-12")} src={this.profileImg?`https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${comment.profileImg}`:"/icons/no_profile.png"} alt=""/>
                             </div>
-                            <div className="w-1/12 hansans translate-y-3 ml-2 text-xl">
+                            <div className="w-2/12 hansans translate-y-3 ml-2 text-xl">
                                 {comment.name}
                             </div>
-                            <div className="w-8/12 kargugsu text-xl translate-y-2 ml-2">
+                            <div className="w-7/12 kargugsu text-xl translate-y-2 ml-2">
                                 {comment.content}
                             </div>
                             <div className="w-2/12 translate-y-3 text-xs">
