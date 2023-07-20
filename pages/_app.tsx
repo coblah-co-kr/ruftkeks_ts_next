@@ -40,7 +40,7 @@ function App({ Component, pageProps }: AppProps) {
           {isMobile?(
             <div className={'max-w-[48rem] mx-auto bg-white dark:bg-black h-screen'.concat((isMobile)?" w-fit":"")}>
               {NavBar(router.pathname)}
-              <div className='text-center hansans text-xl h-96 py-48'>
+              <div className='text-center hansans text-xl h-96 py-48 dark:text-white'>
                 회비내역은 모바일에서 지원하지 않습니다.
               </div>
             </div>

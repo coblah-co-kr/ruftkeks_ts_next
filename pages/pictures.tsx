@@ -204,7 +204,7 @@ class pictureScript {
                 }
                 </div>
                 <div className="flex flex-row border-t-2 py-2 mt-5">
-                    <input onKeyDown={(e)=> (e.key === "Enter")? this.postComment(picData, reverseIndex):null} onChange={(e)=> this.setCurrentComment(e.target.value)} value={this.currentComment} type="text" placeholder="댓글 달기.." className="w-9/12 ml-2 bg-slate-700"/>
+                    <input onKeyDown={(e)=> (e.key === "Enter")? this.postComment(picData, reverseIndex):null} onChange={(e)=> this.setCurrentComment(e.target.value)} value={this.currentComment} type="text" placeholder="댓글 달기.." className="w-9/12 ml-2 dark:bg-slate-700"/>
                     <button onClick={()=>this.postComment(picData, reverseIndex)} className="w-3/12 hansans text-devLogWork dark:text-white">게시</button>
                 </div>
             </div>
