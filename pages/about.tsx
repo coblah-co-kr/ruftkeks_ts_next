@@ -34,6 +34,8 @@ class Dummy extends User {
 interface UsersInfo {
     latitude : number,
     longitude : number,
+    lastLatitude : number,
+    lastLongitude : number,
     name : string,
     nickname : string,
     email : string,
@@ -170,7 +172,9 @@ export default function About() {
             };
             const map = new window.kakao.maps.Map(document.getElementById("map"), options);
             users.forEach(user => {
-                const position = new window.kakao.maps.LatLng(user.latitude, user.longitude);
+                const position = user.lastLatitude?
+                (new window.kakao.maps.LatLng(user.lastLatitude, user.lastLongitude)):
+                (new window.kakao.maps.LatLng(user.latitude, user.longitude));
                 const markerImage = new window.kakao.maps.MarkerImage(
                     (
                         user.profileImg ? `https://ruuftkeksimg.s3.ap-northeast-2.amazonaws.com/${user.profileImg}` : "/icons/no_profile.png"

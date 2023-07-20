@@ -559,6 +559,33 @@ export default function Pictures() {
         } catch (error) {
             console.log(error);
         }
+
+        try{
+            const locRes = await fetch(
+                `${process.env.NEXT_PUBLIC_API_HOST}/api/account/update/gps`,
+                {
+                    method: "put",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify({
+                        lastLatitude: location?.latitude,
+                        lastLongitude: location?.longitude,
+                    })
+                });
+
+            const {status} = locRes;
+
+            if (status === 201) {
+                setIsUpload(false);
+            } else {
+                console.log("개발자에게 문의하세요.");
+            }
+        } catch (error) {
+            console.log(error);
+            alert(error);
+        }
     }
     useEffect(() => {
         if (location !== undefined)
