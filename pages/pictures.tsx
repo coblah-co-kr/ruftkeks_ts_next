@@ -406,6 +406,9 @@ export default function Pictures() {
                 formData.append("hashTag", "#"+splitedHashTag[i].trim());
             }
         }
+        if (hashTag==="") {
+            formData.append("hashTag", "#근황");
+        }
         if (name==="") {
             alert("서버와 연결이 끊어졌습니다.");
             goToHome(accessToken, router, true);
@@ -432,9 +435,11 @@ export default function Pictures() {
             if (status === 201) {
                 alert("저장되었습니다.");
                 setIsUpload(false);
+            } else if (status === 400) {
+                alert("입력값을 다시한번 확인해주세요.")
             } else {
                 console.log("개발자에게 문의하세요.");
-                alert(`오류가 발생했습니다. status : ${status} formData : ${formData}`);
+                alert(`오류가 발생했습니다. status : ${status} token : ${accessToken}`);
             }
         } catch (error) {
             console.log(error);
